@@ -1,0 +1,18 @@
+.copy_link {
+  position: absolute;
+  margin-left: 20vw;
+  width: 60vw;
+  bottom: 15vh;
+  color: #fff;
+  background: linear-gradient(to Right, #3a56a0, #5b86fd);
+}
+.back {
+  width: 2rem;
+}
+
+.invite {
+  background-image: url("../../assets/invite_bg.jpg");
+  width: 100vw;
+  height: calc(100vh - 45px);
+  background-size: 100% 100%;
+}

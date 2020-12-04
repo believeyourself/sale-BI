@@ -1,0 +1,77 @@
+.home {
+  text-align: center;
+  font-weight: bold;
+  padding: 0 15px 15vh 15px;
+  overflow-y: scroll;
+}
+
+.home > img {
+  width: calc(100vw - 30px);
+  margin-top: 15px;
+}
+
+.home .process {
+  display: flex;
+  justify-content: space-around;
+}
+
+.home .process > img {
+  width: 15vw;
+  height: 15vw;
+  border: 3px solid #ddd;
+}
+
+.home .user_game,
+.home .user {
+  background-size: 100% 100%;
+  padding: 15px;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.home .user_game {
+  color: #3d5aa9;
+  background-image: url("../../assets/hot_game_bg.jpg");
+}
+
+.home .user {
+  color: #3d5aa9;
+  background-image: url("../../assets/fb_name_bg.jpg");
+}
+
+.home .user img {
+  width: 10vw;
+}
+
+.avatar {
+  width: 15vw;
+  background-color: #ddd;
+  border-radius: 50%;
+  color: #fff;
+}
+
+.play_button {
+  padding: 0 5px;
+  width: 25vw;
+  color: #fff;
+  background-image: linear-gradient(to right, #3b57a2, #5a85fa);
+}
+
+.cash_out_button {
+  padding: 0 5px;
+  font-weight: bold;
+  width: 25vw;
+  color: #fff;
+  background-image: linear-gradient(to right, #fd7d07, #ffea00, #ff8001);
+}
+.hot_game_banner_container {
+  background-color: #bfbfbf;
+  padding: 5px;
+}
+.hot_game_banner_container > img {
+  width: 100%;
+}
+.assets_value {
+  display: flex;
+  align-items: center;
+}

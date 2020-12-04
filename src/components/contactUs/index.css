@@ -1,0 +1,21 @@
+.contact_us {
+  width: 100vw;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  background-color: #b4b9cd;
+  height: 6vh;
+}
+.contact_us > div {
+  overflow: visible;
+}
+.contact_us .imgContainer {
+  background-color: #b4b9cd;
+  padding: 4px;
+  border-radius: 50%;
+  position: relative;
+  bottom: 3vh;
+}
+.contact_us img {
+  height: 8vh;
+}

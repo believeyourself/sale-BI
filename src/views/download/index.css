@@ -1,0 +1,17 @@
+.download_btn {
+  margin: 0 auto;
+  top: 75vh;
+  width: 60vw;
+  color: #fff;
+  font-weight: bold;
+  background: linear-gradient(to Bottom, #f1e553, #feb912);
+}
+.back {
+  width: 2rem;
+}
+
+.download_bg {
+  width: 100vw;
+  height: calc(100vh - 45px);
+  background-size: 100% 100%;
+}

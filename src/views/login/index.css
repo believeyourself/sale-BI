@@ -1,0 +1,26 @@
+.login {
+  height: 100vh;
+  background-image: url("../../assets/inviteBg.jpg");
+  background-size: 100% 100%;
+}
+.login h2 {
+  color: #116aad;
+  font-size: 1.7rem;
+  margin: 0.6rem 0 0 0;
+}
+.login h1 {
+  color: #116aad;
+  font-size: 2.2rem;
+  margin: 0 0 0.6rem 0;
+}
+
+.login .money {
+  color: #ff9600;
+}
+
+.login p {
+  color: #ff9600;
+  padding: 0 15vw;
+  text-align: center;
+  font-weight: bold;
+}

@@ -1,0 +1,13 @@
+.back {
+  width: 2rem;
+}
+
+.cash_info_header {
+  background-image: url("../../assets/cashInfoHeader.png");
+  height: 30vh;
+  background-size: cover;
+}
+
+.cash_info_header > img {
+  width: 30vw;
+}
