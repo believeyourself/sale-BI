@@ -9,6 +9,7 @@ import "./index.css";
 function ContactUs() {
 
     const redirectTo = (url) => {
+        window.analytics.logEvent(`click_${url}`);
         window.location.href = config.contactUs[url];
     }
 

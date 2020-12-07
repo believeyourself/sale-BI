@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Toast, Flex, InputItem, List, WhiteSpace, NavBar } from "antd-mobile";
 import backImg from "../../assets/back.png"
 import didabuImg from "../../assets/radiusIcon.png"
@@ -26,8 +26,13 @@ const CashInfo = (props) => {
             Toast.fail(`Server internal error:${response.message}`);
         }
 
+        window.analytics.logEvent("set_paypal");
         setLoading(false);
     }
+
+    useEffect(() => {
+        window.analytics.logEvent("enter_set_paypal_page");
+    }, [])
     return (
         <div>
             <NavBar

@@ -4,7 +4,7 @@
  * @Author: lizejun
  * @Date: 2020-12-01 13:36:12
  * @LastEditors: lizejun
- * @LastEditTime: 2020-12-01 13:40:37
+ * @LastEditTime: 2020-12-07 13:09:29
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -16,18 +16,30 @@
       content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
     />
     <script src="https://as.alipayobjects.com/g/component/fastclick/1.0.6/fastclick.js"></script>
-    <body>
-      <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
-    
-      <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-      <script src="/__/firebase/7.23.0/firebase-app.js"></script>
-    
-      <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
-      <script src="/__/firebase/7.23.0/firebase-analytics.js"></script>
-    
-      <!-- Add Firebase products that you want to use -->
-      <script src="/__/firebase/7.23.0/firebase-auth.js"></script>
-      <script src="/__/firebase/7.23.0/firebase-firestore.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-analytics.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      var firebaseConfig = {
+        apiKey: "AIzaSyDrA683VyXyQO8AqHGdrFJOoMmx1be9svA",
+        authDomain: "plinkomaster-1ad16.firebaseapp.com",
+        databaseURL: "https://plinkomaster-1ad16.firebaseio.com",
+        projectId: "plinkomaster-1ad16",
+        storageBucket: "plinkomaster-1ad16.appspot.com",
+        messagingSenderId: "350096893615",
+        appId: "1:350096893615:web:d39adff52031940717165a",
+        measurementId: "G-WZJDL399QB",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      window.analytics = firebase.analytics();
+    </script>
     <script>
       if ("addEventListener" in document) {
         document.addEventListener(

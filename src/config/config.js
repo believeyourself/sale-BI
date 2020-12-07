@@ -2,7 +2,7 @@ const config = {
   contactUs: {
     whatsApp: "https://chat.whatsapp.com/GDFGTZStwJC97sR9v986IJ",
     telegram: "https://t.me/joinchat/VaHa2hnWNoqWwHA5VJIQSA",
-    facebook: "https://www.facebook.com/groups/188376496233255",
+    facebook: "https://www.facebook.com/dabu.di.ArcadePusher/",
   },
   hotGames: [
     {

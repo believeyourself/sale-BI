@@ -26,7 +26,6 @@ const ASSETS_IMAGE = {
 export default function Home(props) {
     let { match } = props;
     let base64UserInfo = match.params?.userInfo;
-    const [loading, setLoading] = useState(false);
     const [userInfo, setUserInfo] = useState({
         appName: "ArcadePusher",
         assets: []
@@ -37,19 +36,19 @@ export default function Home(props) {
     });
 
     const queryData = async () => {
-        setLoading(true);
         if (!base64UserInfo) {
             Toast.fail("invalid params!");
             return;
         }
 
+        Toast.loading("Loading...", 30);
         let { data: userInfo } = await request.post("https://fkz3gphuoa.execute-api.us-west-2.amazonaws.com/Prod/marketing/infoVerify", base64UserInfo);
 
         let { data: processInfo } = await request.get(`https://fkz3gphuoa.execute-api.us-west-2.amazonaws.com/Prod/marketing/campaigns?accountId=${userInfo.accountId}&appName=${userInfo.appName}`);
 
         setUserInfo(userInfo);
         setProcessInfo(processInfo);
-        setLoading(false);
+        Toast.hide();
     };
 
     useEffect(() => {
@@ -57,10 +56,12 @@ export default function Home(props) {
     }, []);
 
     const goToInvite = () => {
+        window.analytics.logEvent("click_invite");
         window.location.hash = `#/invite/${btoa(processInfo.promotionalLink)}`;
     }
-    const goToDownload = () => {
-        window.location.hash = "#/download/slotsGo";
+    const goToDownload = (appName) => {
+        window.analytics.logEvent(`click_${appName}_download`);
+        window.location.hash = `#/download/${appName}`;
     }
 
     //拉新进度展示
@@ -111,7 +112,7 @@ export default function Home(props) {
                     processInfo.currentValue >= processInfo.finalValue ?
                         <Button type="link" href={`#/cashInfo/${processInfo.userCampaignId}`} size="small" className="cash_out_button">CASH OUT</Button>
                         :
-                        <Button type="link" size="small" href={`#/invite/${btoa(processInfo.promotionalLink)}`} className="play_button">INVITE</Button>
+                        <Button onClick={goToInvite} size="small" className="play_button">INVITE</Button>
                 }
             </Flex>
             <WhiteSpace></WhiteSpace>
@@ -127,7 +128,7 @@ export default function Home(props) {
             </section>
             <h3 style={{ paddingLeft: "15px", textAlign: "left" }}>Hot Games</h3>
             <section className="hot_game_banner_container">
-                <img onClick={goToDownload} alt="" src={slotsGoBannerUrl} />
+                <img onClick={() => goToDownload("slotsGo")} alt="" src={slotsGoBannerUrl} />
             </section>
             <WhiteSpace></WhiteSpace>
             <Flex className="user_game" justify="start">
@@ -136,7 +137,7 @@ export default function Home(props) {
                     <p>SlotsGo - Spin to Win</p>
                     <p>the best game to play</p>
                 </Flex.Item>
-                <Button size="small" type="link" href="#/download/slotsGo" className="play_button">PLAY NOW</Button>
+                <Button size="small" onClick={() => goToDownload("slotsGo")} className="play_button">PLAY NOW</Button>
             </Flex>
             <ContactUs></ContactUs>
         </div >

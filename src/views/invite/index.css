@@ -1,8 +1,9 @@
 .copy_link {
   position: absolute;
   margin-left: 20vw;
+  margin-top: 1rem;
   width: 60vw;
-  bottom: 15vh;
+  bottom: 25vh;
   color: #fff;
   background: linear-gradient(to Right, #3a56a0, #5b86fd);
 }

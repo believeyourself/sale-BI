@@ -29,6 +29,8 @@ export default function Login(props) {
                 version: "v9.0",
             });
         };
+
+        window.analytics.logEvent("enter_login_page");
     }, []);
 
     const queryData = async () => {
@@ -58,6 +60,7 @@ export default function Login(props) {
 
     function handleFbLogin() {
         setLoading(true);
+        window.analytics.logEvent("click_fb_login");
         window.FB?.login(function ({ authResponse, status }) {
             if (status === 'connected') {
                 let params = {
@@ -70,16 +73,17 @@ export default function Login(props) {
                     platform: userInfo.platform,
                     boundDevice: userInfo.platform,
                     originalMessage: JSON.stringify(authResponse)
-
                 }
                 window.FB.api('/me', async (response) => {
                     params.userName = response.name;
                     let { data } = await request.post("https://fkz3gphuoa.execute-api.us-west-2.amazonaws.com/Prod/thirdPartyUser/bind", params);
                     if (data.accountId) {
+                        window.analytics.logEvent("click_fb_login_success");
                         setIsLogin(true);
                     }
                 });
             } else {
+                window.analytics.logEvent("click_fb_login_failed");
                 Toast.Fail('facebook login failed!');
             }
             setLoading(false);
