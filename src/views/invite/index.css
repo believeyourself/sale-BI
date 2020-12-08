@@ -1,14 +1,21 @@
-.copy_link {
+.share {
   position: absolute;
   margin-left: 20vw;
   margin-top: 1rem;
   width: 60vw;
-  bottom: 25vh;
+  bottom: 10vh;
+}
+
+.share a {
+  margin: 1rem 0;
   color: #fff;
   background: linear-gradient(to Right, #3a56a0, #5b86fd);
+  z-index: 999;
 }
+
 .back {
   width: 2rem;
+  height: 2rem;
 }
 
 .invite {
@@ -16,4 +23,60 @@
   width: 100vw;
   height: calc(100vh - 45px);
   background-size: 100% 100%;
+}
+
+.introduction_video {
+  position: absolute;
+  right: 0;
+  padding: 5px;
+  color: #fff;
+  background: linear-gradient(to Right, #3a56a0, #5b86fd);
+  box-shadow: 0px 0px 2px 2px #3a56a0 inset;
+  display: inline-block;
+  animation: shiny-btn 2s linear infinite;
+  -webkit-animation: shiny-btn 2s linear infinite;
+}
+
+.redeem_video {
+  position: absolute;
+  width: 50vw;
+  left: -100vw;
+}
+
+@-webkit-keyframes shiny-btn {
+  10% {
+    transform: rotate(0) scale(1.2, 1.2);
+    -webkit-transform: rotate(0) scale(1.2, 1.2);
+    box-shadow: 1px 1px 4px 0px #685b5b;
+  }
+  25% {
+    -webkit-transform: rotate(10deg) scale(1.2, 1.2);
+    box-shadow: 1px 1px 4px 0px #685b5b;
+  }
+  75% {
+    -webkit-transform: rotate(-10deg) scale(1.2, 1.2);
+    box-shadow: 1px 1px 4px 0px #685b5b;
+  }
+  100% {
+    -webkit-transform: rotate(0);
+  }
+}
+
+@keyframes shiny-btn {
+  10% {
+    transform: rotate(0) scale(1.2, 1.2);
+    -webkit-transform: rotate(0) scale(1.2, 1.2);
+    box-shadow: 1px 1px 4px 0px #685b5b;
+  }
+  25% {
+    -webkit-transform: rotate(10deg) scale(1.2, 1.2);
+    box-shadow: 1px 1px 4px 0px #685b5b;
+  }
+  75% {
+    -webkit-transform: rotate(-10deg) scale(1.2, 1.2);
+    box-shadow: 1px 1px 4px 0px #685b5b;
+  }
+  100% {
+    -webkit-transform: rotate(0);
+  }
 }

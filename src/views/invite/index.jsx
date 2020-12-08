@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Button, Toast, NavBar } from "antd-mobile";
 import copy from "copy-to-clipboard";
-import backImg from "../../assets/back.png"
+import backImg from "../../assets/back.png";
+import mp4 from "../../assets/redeem.mp4";
 import "./index.css";
 
 const info = [
@@ -18,6 +19,7 @@ const info = [
 ];
 
 const Invite = (props) => {
+    const videoRef = useRef();
     const emailContent = `Hi,How is it going？I'm playing the so funny game ArcadePusher and need you help right now!Just help me download this game thorough the link and I can gain $1 immediately!%0dClick the link！👇👇👇(If link is not clickable, please copy and paste it into the address bar)%0d`;
     const shareUrl = atob(props.match.params.shareUrl);
     const randomIndex = Math.floor(Math.random() * info.length);
@@ -31,6 +33,37 @@ const Invite = (props) => {
         Toast.success("Copy Success!Invite your best friends and win real money!");
     }
 
+    //進入全屏
+    function launchFullscreen() {
+        let ele = videoRef.current;
+        if (ele.requestFullscreen) {
+            ele.requestFullscreen();
+        } else if (ele.mozRequestFullScreen) {
+            ele.mozRequestFullScreen();
+        } else if (ele.webkitRequestFullScreen) {
+            ele.webkitRequestFullScreen();
+        }
+    }
+
+    let shareButton = null;
+    if (window.navigator.share) {
+        shareButton = <Button onClick={navigator.share({
+            title: randomEmailTitle,
+            url: shareUrl
+        }).then(() => {
+        })} className="copy_link">Share</Button>
+    } else {
+        shareButton = (<React.Fragment>
+            <Button onClick={copyUrl}>Copy Link</Button>
+            <Button
+                type="link"
+                onClick={window.analytics.logEvent("click_share_with_email")}
+                href={`mailto:?subject=${randomEmailTitle}&body=${emailContent}${shareUrl}`}>
+                Share With Email
+            </Button>
+        </React.Fragment>);
+    }
+
     return (
         <React.Fragment>
             <NavBar
@@ -38,14 +71,10 @@ const Invite = (props) => {
                 style={{ backgroundColor: "#FFF" }}
                 onLeftClick={() => window.history.back(-1)}
             />
+            <span className="introduction_video" onClick={launchFullscreen}>PLAY VIDEO</span>
+            <video className="redeem_video" autoPlay ref={videoRef} src={mp4}></video>
             <div className="invite"></div>
-            <Button onClick={copyUrl} className="copy_link">Copy Link</Button>
-            <Button
-                type="link"
-                onClick={window.analytics.logEvent("click_share_with_email")}
-                href={`mailto:?subject=${randomEmailTitle}&body=${emailContent}${shareUrl}`} className="copy_link">
-                Share With Email
-            </Button>
+            <div className="share">{shareButton}</div>
         </React.Fragment >
     )
 }

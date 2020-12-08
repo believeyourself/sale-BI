@@ -9,25 +9,29 @@ import inviteBannerUrl from "../../assets/invite_banner.jpg";
 import userUrl from "../../assets/user.jpg"
 import fbUrl from "../../assets/facebook.png"
 import inviteUrl from "../../assets/invite.png"
-import ArcadePusher_assets_0 from "../../assets/ArcadePusher_assets_0.png"
-import ArcadePusher_assets_1 from "../../assets/ArcadePusher_assets_1.png"
-import ArcadePusher_assets_2 from "../../assets/ArcadePusher_assets_2.png"
+import arcadepusher_assets_0 from "../../assets/arcadepusher_assets_0.png"
+import arcadepusher_assets_1 from "../../assets/arcadepusher_assets_1.png"
+import arcadepusher_assets_2 from "../../assets/arcadepusher_assets_2.png"
 import arcadePusherUrl from "../../assets/arcadePusher.png"
 import slotsGoUrl from "../../assets/slotsGo.png";
 import slotsGoBannerUrl from "../../assets/slotsGo_banner.jpg";
 import "./index.css";
 
 const ASSETS_IMAGE = {
-    ArcadePusher_assets_0,
-    ArcadePusher_assets_1,
-    ArcadePusher_assets_2
+    arcadepusher_assets_0,
+    arcadepusher_assets_1,
+    arcadepusher_assets_2
+}
+
+const GAME_ICON = {
+    arcadepusher: arcadePusherUrl
 }
 
 export default function Home(props) {
     let { match } = props;
     let base64UserInfo = match.params?.userInfo;
     const [userInfo, setUserInfo] = useState({
-        appName: "ArcadePusher",
+        appName: "",
         assets: []
     });
     const [processInfo, setProcessInfo] = useState({
@@ -78,7 +82,6 @@ export default function Home(props) {
     let assets = [];
     for (let i = 0; i < userInfo.assets.length; ++i) {
         let asset = userInfo.assets[i];
-        // let button = (<Button className="play_button" size="small">Play</Button>);
         let button = (<Button disabled className="cash_out_button" size="small">CASH OUT</Button>);
         if (asset.currentValue >= asset.targetValue) {
             button = (<Button className="cash_out_button" size="small">CASH OUT</Button>);
@@ -87,7 +90,7 @@ export default function Home(props) {
         assets.push((<Flex key={`${userInfo.appName}_assets_${asset.code}`} justify="start">
             <Flex.Item>
                 <Flex>
-                    <img alt="" src={ASSETS_IMAGE[`${userInfo.appName}_assets_${asset.code}`]}></img>
+                    <img alt="" src={ASSETS_IMAGE[`${userInfo.appName.toLowerCase()}_assets_${asset.code}`]}></img>
                     <span style={{ marginLeft: "8px" }}>{asset.value} / {asset.targetValue}</span>
                 </Flex>
             </Flex.Item>
@@ -104,7 +107,7 @@ export default function Home(props) {
             </section>
             <h3 style={{ paddingLeft: "15px", textAlign: "left" }}>My Games</h3>
             <Flex className="user_game" justify="start">
-                <img alt="" className="avatar" src={arcadePusherUrl} />
+                <img alt="" className="avatar" src={GAME_ICON[userInfo.appName.toLowerCase()]} />
                 <Flex.Item>
                     <span>{userInfo.appName}</span>
                 </Flex.Item>

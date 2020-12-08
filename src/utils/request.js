@@ -24,7 +24,8 @@ request.interceptors.response.use(
     return response?.data;
   },
   function (error) {
-    Toast.fail("Internal Server Error");
+    // Toast.fail("Internal Server Error");
+    Toast.fail(error.message);
     return Promise.reject(error);
   }
 );
