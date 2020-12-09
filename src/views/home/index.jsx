@@ -19,6 +19,7 @@ import plinkoGoIcon from "../../assets/plinkogo_icon.png";
 import candyPusherIcon from "../../assets/candypusher_icon.png";
 import plinkoManiaIcon from "../../assets/plinkomania_icon.png";
 import slotsGoBanner from "../../assets/slotsgo_banner.jpg";
+import arcadePusherBanner from "../../assets/arcadepusher_banner.jpg";
 import plinkoGoBanner from "../../assets/plinkogo_banner.jpg";
 import plinkomaniaBanner from "../../assets/plinkomania_banner.jpg";
 import candyPusherBanner from "../../assets/candypusher_banner.jpg";
@@ -42,7 +43,7 @@ const HOT_GAMES = [
     {
         icon: arcadePusherIcon,
         name: "arcadePusher",
-        banner: slotsGoBanner,
+        banner: arcadePusherBanner,
         text: ""
     },
     {

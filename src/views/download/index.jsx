@@ -6,6 +6,7 @@ import slotsGo_bg from "../../assets/slotsgo_bg.jpg";
 import plinkoGo_bg from "../../assets/plinkogo_poster.jpg";
 import plinkoMania_bg from "../../assets/plinkomania_poster.jpg";
 import candyPusher_bg from "../../assets/candypusher_poster.jpg";
+import arcadePusher_bg from "../../assets/arcadepusher_poster.jpg";
 
 import "./index.css";
 
@@ -14,6 +15,7 @@ const GAME_BG = {
     plinkogo: plinkoGo_bg,
     plinkomania: plinkoMania_bg,
     candypusher: candyPusher_bg,
+    arcadepusher: arcadePusher_bg
 };
 
 const Download = (props) => {
