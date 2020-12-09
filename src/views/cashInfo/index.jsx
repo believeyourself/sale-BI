@@ -7,7 +7,7 @@ import request from "../../utils/request";
 import "./index.css";
 
 const CashInfo = (props) => {
-    let { userCampaignId } = props.match.params;
+    let { userCampaignId, stage } = props.match.params;
     const [paypal, setPaypal] = useState(null);
     const [loading, setLoading] = useState(false);
     const setUserPaypal = async () => {
@@ -18,6 +18,7 @@ const CashInfo = (props) => {
         }
         let response = await request.post("https://fkz3gphuoa.execute-api.us-west-2.amazonaws.com/Prod/marketing/paypal", {
             userCampaignId,
+            stage,
             paypal
         });
         if (response.code === 200 && response.isSuccessful) {

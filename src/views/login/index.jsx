@@ -40,7 +40,7 @@ export default function Login(props) {
             return;
         }
 
-        let { data } = await request.post("https://fkz3gphuoa.execute-api.us-west-2.amazonaws.com/Prod/marketing/infoVerify", base64UserInfo);
+        let { data } = await request.post("/marketing/infoVerify", base64UserInfo);
 
         if (data?.facebookBound) {
             setIsLogin(true);
@@ -76,7 +76,7 @@ export default function Login(props) {
                 }
                 window.FB.api('/me', async (response) => {
                     params.userName = response.name;
-                    let { data } = await request.post("https://fkz3gphuoa.execute-api.us-west-2.amazonaws.com/Prod/thirdPartyUser/bind", params);
+                    let { data } = await request.post("/thirdPartyUser/bind", params);
                     if (data.accountId) {
                         window.analytics.logEvent("click_fb_login_success");
                         setIsLogin(true);
@@ -102,7 +102,7 @@ export default function Login(props) {
             <h2>INVITE AND</h2>
             <h1>RECEIVE</h1>
             <h1 className="money">$1</h1>
-            <p>Invite 5 friends to download our game and receive $1</p>
+            <p>Invite 3 friends to download our game and receive $1</p>
             <Button
                 style={{
                     width: "70vw",

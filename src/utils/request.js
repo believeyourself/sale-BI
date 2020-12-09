@@ -1,7 +1,9 @@
 import axios from "axios";
 import { Toast } from "antd-mobile";
+import config from "../config/config";
 
 let request = axios.create({
+  baseURL: config.server.baseUrl,
   timeout: 60000,
 });
 
@@ -24,8 +26,7 @@ request.interceptors.response.use(
     return response?.data;
   },
   function (error) {
-    // Toast.fail("Internal Server Error");
-    Toast.fail(error.message);
+    Toast.fail("Internal Server Error");
     return Promise.reject(error);
   }
 );

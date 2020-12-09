@@ -1,20 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { WhiteSpace, Button, Flex, Toast } from "antd-mobile";
+import React, { useState, useEffect, useRef } from "react";
+import { WhiteSpace, Button, Flex, Toast, Badge, Carousel } from "antd-mobile";
 import ContactUs from "../../components/contactUs";
 import request from "../../utils/request";
 
 
 //图片
 import inviteBannerUrl from "../../assets/invite_banner.jpg";
-import userUrl from "../../assets/user.jpg"
-import fbUrl from "../../assets/facebook.png"
-import inviteUrl from "../../assets/invite.png"
-import arcadepusher_assets_0 from "../../assets/arcadepusher_assets_0.png"
-import arcadepusher_assets_1 from "../../assets/arcadepusher_assets_1.png"
-import arcadepusher_assets_2 from "../../assets/arcadepusher_assets_2.png"
-import arcadePusherUrl from "../../assets/arcadePusher.png"
-import slotsGoUrl from "../../assets/slotsGo.png";
-import slotsGoBannerUrl from "../../assets/slotsGo_banner.jpg";
+import playImg from "../../assets/play.png";
+import userUrl from "../../assets/user.jpg";
+import fbUrl from "../../assets/facebook.png";
+import inviteUrl from "../../assets/invite.png";
+import arcadepusher_assets_0 from "../../assets/arcadepusher_assets_0.png";
+import arcadepusher_assets_1 from "../../assets/arcadepusher_assets_1.png";
+import arcadepusher_assets_2 from "../../assets/arcadepusher_assets_2.png";
+import arcadePusherIcon from "../../assets/arcadePusher.png"
+import slotsGoIcon from "../../assets/slotsgo_icon.png";
+import plinkoGoIcon from "../../assets/plinkogo_icon.png";
+import candyPusherIcon from "../../assets/candypusher_icon.png";
+import plinkoManiaIcon from "../../assets/plinkomania_icon.png";
+import slotsGoBanner from "../../assets/slotsgo_banner.jpg";
+import plinkoGoBanner from "../../assets/plinkogo_banner.jpg";
+import plinkomaniaBanner from "../../assets/plinkomania_banner.jpg";
+import candyPusherBanner from "../../assets/candypusher_banner.jpg";
+import videoMp4 from "../../assets/redeem.mp4";
 import "./index.css";
 
 const ASSETS_IMAGE = {
@@ -24,12 +32,50 @@ const ASSETS_IMAGE = {
 }
 
 const GAME_ICON = {
-    arcadepusher: arcadePusherUrl
+    arcadepusher: arcadePusherIcon,
+    slotsgo: slotsGoIcon,
+    plinkomania: plinkoManiaIcon,
+    plinkogo: plinkoGoIcon,
 }
+
+const HOT_GAMES = [
+    {
+        icon: arcadePusherIcon,
+        name: "arcadePusher",
+        banner: slotsGoBanner,
+        text: ""
+    },
+    {
+        icon: slotsGoIcon,
+        name: "slotsGo",
+        banner: slotsGoBanner,
+        text: ""
+    },
+    {
+        icon: candyPusherIcon,
+        name: "candyPusher",
+        banner: candyPusherBanner,
+        text: ""
+    },
+    {
+        icon: plinkoManiaIcon,
+        name: "plinkoMania",
+        banner: plinkomaniaBanner,
+        text: ""
+    },
+    {
+        icon: plinkoGoIcon,
+        name: "plinkoGo",
+        banner: plinkoGoBanner,
+        text: ""
+    }
+]
 
 export default function Home(props) {
     let { match } = props;
     let base64UserInfo = match.params?.userInfo;
+    const videoRef = useRef(null);
+    const videoContainerRef = useRef(null);
     const [userInfo, setUserInfo] = useState({
         appName: "",
         assets: []
@@ -46,9 +92,9 @@ export default function Home(props) {
         }
 
         Toast.loading("Loading...", 30);
-        let { data: userInfo } = await request.post("https://fkz3gphuoa.execute-api.us-west-2.amazonaws.com/Prod/marketing/infoVerify", base64UserInfo);
+        let { data: userInfo } = await request.post("/marketing/infoVerify", base64UserInfo);
 
-        let { data: processInfo } = await request.get(`https://fkz3gphuoa.execute-api.us-west-2.amazonaws.com/Prod/marketing/campaigns?accountId=${userInfo.accountId}&appName=${userInfo.appName}`);
+        let { data: processInfo } = await request.get(`/marketing/campaigns?accountId=${userInfo.accountId}&appName=${userInfo.appName}`);
 
         setUserInfo(userInfo);
         setProcessInfo(processInfo);
@@ -68,18 +114,46 @@ export default function Home(props) {
         window.location.hash = `#/download/${appName}`;
     }
 
-    //拉新进度展示
-    let avatars = [];
-    for (let i = 0; i < processInfo?.currentValue; ++i) {
-        avatars.push(<img key={"avatar" + i} alt="" className="avatar" src={userUrl} />)
+    const showVideo = () => {
+        videoContainerRef.current.style.display = "block";
+        videoRef.current.play();
     }
 
-    for (let i = 0; i < 5 - processInfo?.currentValue; ++i) {
-        avatars.push(<img onClick={goToInvite} key={"invite" + i} alt="" className="avatar" src={inviteUrl} />)
+    const hideVideo = () => {
+        videoContainerRef.current.style.display = "none";
+        videoRef.current.pause();
+    }
+
+    //拉新进度展示
+    let avatars = [];
+    let avatarNode = null;
+    let invites = [];
+    let avatarCount = processInfo.currentValue;
+    for (let i = 0; i < avatarCount; ++i) {
+        if (i < 6) {
+            avatars.push(<img key={"avatar" + i} alt="" className="avatar user_invited" src={userUrl} />);
+        } else {
+            invites.push(<img key={"avatar" + i} alt="" className="avatar" src={userUrl} />);
+        }
+    }
+
+    if (avatars.length > 0) {
+        avatarNode = <Badge style={{
+            position: "absolute",
+            right: -3 * avatars.length + "px",
+            top: "1px",
+        }} text={avatars.length}><div className="invited_avatar">{avatars}</div></Badge>;
+    }
+
+    let inviteCount = 10 - avatarCount;
+    let inviteImgCount = avatarCount > 0 ? 4 : 5
+    for (let i = 0; i < inviteCount && i < inviteImgCount; ++i) {
+        invites.push(<img onClick={goToInvite} key={"invite" + i} alt="" className="avatar user_invite" src={inviteUrl} />)
     }
 
     //游戏资产
     let assets = [];
+
     for (let i = 0; i < userInfo.assets.length; ++i) {
         let asset = userInfo.assets[i];
         let button = (<Button disabled className="cash_out_button" size="small">CASH OUT</Button>);
@@ -98,13 +172,46 @@ export default function Home(props) {
         </Flex>));
     }
 
+    //hot games
+    let hotGames = [];
+    let banners = [];
+    for (let i = 0; i < HOT_GAMES.length; ++i) {
+        let game = HOT_GAMES[i];
+        if (game.name?.toLowerCase() !== userInfo.appName?.toLowerCase()) {
+            banners.push(<img key={game.name} onClick={() => goToDownload("slotsGo")} alt="" src={game.banner} />)
+            hotGames.push(<React.Fragment key={game.name}>
+                <WhiteSpace></WhiteSpace>
+                <Flex className="user_game" justify="start">
+                    <img alt="" className="avatar" src={game.icon} />
+                    <Flex.Item>
+                        <p>{game.name}</p>
+                        <p>{game.text}</p>
+                    </Flex.Item>
+                    <Button size="small" onClick={() => goToDownload(game.name)} className="play_button">PLAY NOW</Button>
+                </Flex>
+            </React.Fragment>)
+        }
+    }
+
+
+
     return (
         <div className="home">
+            <img className="play_video_btn" onClick={showVideo} src={playImg} />
+            <div ref={videoContainerRef} className="redeem_video">
+                <span onClick={hideVideo} className="close_icon">X</span>
+                <video
+                    controls
+                    ref={videoRef}
+                    src={videoMp4}>
+                </video>
+            </div>
             <img onClick={goToInvite} alt="" src={inviteBannerUrl} />
             <WhiteSpace></WhiteSpace>
-            <section className="process">
-                {avatars}
-            </section>
+            <Flex className="process" justify="around">
+                {avatarNode}
+                <Flex justify="around">{invites}</Flex>
+            </Flex>
             <h3 style={{ paddingLeft: "15px", textAlign: "left" }}>My Games</h3>
             <Flex className="user_game" justify="start">
                 <img alt="" className="avatar" src={GAME_ICON[userInfo.appName.toLowerCase()]} />
@@ -112,8 +219,8 @@ export default function Home(props) {
                     <span>{userInfo.appName}</span>
                 </Flex.Item>
                 {
-                    processInfo.currentValue >= processInfo.finalValue ?
-                        <Button type="link" href={`#/cashInfo/${processInfo.userCampaignId}`} size="small" className="cash_out_button">CASH OUT</Button>
+                    processInfo.canCashOut ?
+                        <Button type="link" href={`#/cashInfo/${processInfo.stage}/${processInfo.userCampaignId}`} size="small" className="cash_out_button">CASH OUT</Button>
                         :
                         <Button onClick={goToInvite} size="small" className="play_button">INVITE</Button>
                 }
@@ -130,18 +237,14 @@ export default function Home(props) {
                 {assets}
             </section>
             <h3 style={{ paddingLeft: "15px", textAlign: "left" }}>Hot Games</h3>
-            <section className="hot_game_banner_container">
-                <img onClick={() => goToDownload("slotsGo")} alt="" src={slotsGoBannerUrl} />
-            </section>
             <WhiteSpace></WhiteSpace>
-            <Flex className="user_game" justify="start">
-                <img alt="" className="avatar" src={slotsGoUrl} />
-                <Flex.Item>
-                    <p>SlotsGo - Spin to Win</p>
-                    <p>the best game to play</p>
-                </Flex.Item>
-                <Button size="small" onClick={() => goToDownload("slotsGo")} className="play_button">PLAY NOW</Button>
-            </Flex>
+            <Carousel className="hot_game_banner_container"
+                autoplay
+                infinite
+            >
+                {banners}
+            </Carousel>
+            {hotGames}
             <ContactUs></ContactUs>
         </div >
     )

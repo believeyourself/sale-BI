@@ -13,7 +13,7 @@ function App() {
       <Route exact path="/invite/:shareUrl" component={Invite}></Route>
       <Route
         exact
-        path="/cashInfo/:userCampaignId"
+        path="/cashInfo/:stage/:userCampaignId"
         component={CashInfo}
       ></Route>
       <Route exact path="/download/:game" component={Download}></Route>
