@@ -101,8 +101,8 @@ export default function Login(props) {
             <WhiteSpace size="xl"></WhiteSpace>
             <h2>INVITE AND</h2>
             <h1>RECEIVE</h1>
-            <h1 className="money">$1</h1>
-            <p>Invite 3 friends to download our game and receive $1</p>
+            <h1 className="money">CASH PRIZE</h1>
+            <p>Invite 3 friends for <span style={{ color: "#116aad" }}>$1</span>.<br />10 friends for <span style={{ color: "#116aad" }}>$4</span>.</p>
             <Button
                 style={{
                     width: "70vw",

@@ -13,14 +13,18 @@ import inviteUrl from "../../assets/invite.png";
 import arcadepusher_assets_0 from "../../assets/arcadepusher_assets_0.png";
 import arcadepusher_assets_1 from "../../assets/arcadepusher_assets_1.png";
 import arcadepusher_assets_2 from "../../assets/arcadepusher_assets_2.png";
+import bingooo_assets_02 from "../../assets/binggo_assets_0.png";
+import bingooo_assets_01 from "../../assets/binggo_assets_1.png";
 import arcadePusherIcon from "../../assets/arcadePusher.png"
 import slotsGoIcon from "../../assets/slotsgo_icon.png";
 import plinkoGoIcon from "../../assets/plinkogo_icon.png";
+import bingGoIcon from "../../assets/binggo_icon.png";
 import candyPusherIcon from "../../assets/candypusher_icon.png";
 import plinkoManiaIcon from "../../assets/plinkomania_icon.png";
 import slotsGoBanner from "../../assets/slotsgo_banner.jpg";
 import arcadePusherBanner from "../../assets/arcadepusher_banner.jpg";
 import plinkoGoBanner from "../../assets/plinkogo_banner.jpg";
+import bingGoBanner from "../../assets/binggo_banner.jpg";
 import plinkomaniaBanner from "../../assets/plinkomania_banner.jpg";
 import candyPusherBanner from "../../assets/candypusher_banner.jpg";
 import videoMp4 from "../../assets/redeem.mp4";
@@ -29,7 +33,9 @@ import "./index.css";
 const ASSETS_IMAGE = {
     arcadepusher_assets_0,
     arcadepusher_assets_1,
-    arcadepusher_assets_2
+    arcadepusher_assets_2,
+    bingooo_assets_02,
+    bingooo_assets_01,
 }
 
 const GAME_ICON = {
@@ -37,6 +43,7 @@ const GAME_ICON = {
     slotsgo: slotsGoIcon,
     plinkomania: plinkoManiaIcon,
     plinkogo: plinkoGoIcon,
+    bingooo: bingGoIcon,
 }
 
 const HOT_GAMES = [
@@ -68,6 +75,12 @@ const HOT_GAMES = [
         icon: plinkoGoIcon,
         name: "plinkoGo",
         banner: plinkoGoBanner,
+        text: ""
+    },
+    {
+        icon: bingGoIcon,
+        name: "bingooo",
+        banner: bingGoBanner,
         text: ""
     }
 ]

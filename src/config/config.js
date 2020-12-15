@@ -25,6 +25,10 @@ const config = {
       downloadUrl: "https://candypusher.onelink.me/Z7Np/c66ab3a",
       appName: "candyPusher",
     },
+    {
+      downloadUrl: "https://bingooo.onelink.me/d98B/ad5b569f",
+      appName: "bingGo",
+    },
   ],
   server: {
     baseUrl: "https://fkz3gphuoa.execute-api.us-west-2.amazonaws.com/Prod",
