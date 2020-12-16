@@ -2,7 +2,7 @@ import React from "react";
 import { Button, NavBar } from "antd-mobile";
 import backImg from "../../assets/back.png";
 import config from "../../config/config";
-import slotsGo_bg from "../../assets/slotsgo_bg.jpg";
+import slotsGo_bg from "../../assets/slotsgo_poster.jpg";
 import plinkoGo_bg from "../../assets/plinkogo_poster.jpg";
 import plinkoMania_bg from "../../assets/plinkomania_poster.jpg";
 import candyPusher_bg from "../../assets/candypusher_poster.jpg";
@@ -17,7 +17,7 @@ const GAME_BG = {
     plinkomania: plinkoMania_bg,
     candypusher: candyPusher_bg,
     arcadepusher: arcadePusher_bg,
-    binggooo: binggo_bg,
+    bingooo: binggo_bg,
 };
 
 const Download = (props) => {
