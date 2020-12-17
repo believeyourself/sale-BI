@@ -1,11 +1,3 @@
-<!--
- * @Description: 
- * @version: 
- * @Author: lizejun
- * @Date: 2020-12-01 13:36:12
- * @LastEditors: lizejun
- * @LastEditTime: 2020-12-17 13:15:46
--->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -20,10 +12,10 @@
         padding: 0;
         margin: 0;
         background-image: url("https://marketing.gamemasterf9.com/static/images/bg.png");
-        background-size: cover;
+        background-size: stretch;
       }
       img {
-        width: 95%;
+        width: 100vw;
       }
       a {
         text-decoration: none;
@@ -45,18 +37,111 @@
         align-items: center;
         flex-direction: column;
       }
+
+      .award_list {
+        margin-top: 1rem;
+        border-radius: 0.5rem;
+        background-color: #ffffff6e;
+        color: #fff;
+        height: 30vh;
+        overflow: hidden;
+      }
+      .award_list img {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 1rem;
+      }
+      ul {
+        list-style: none;
+        width: 65vw;
+        padding: 0 1rem;
+        font-size: 12px;
+        animation: move 10s linear 1s infinite;
+        transform: translateY(100%);
+      }
+      .title {
+        width: 60vw;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: auto;
+        bottom: 26%;
+        color: #833800;
+      }
+      .title p {
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        font-size: 1rem;
+      }
+      .title p:nth-child(2) {
+        font-size: 1.5rem;
+        font-weight: bolder;
+      }
+
+      @keyframes move {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-40%);
+        }
+      }
+      li {
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+      }
+      .award_user {
+        flex-grow: 3;
+        margin-left: 5px;
+      }
+      .award_value {
+        flex-grow: 1;
+      }
     </style>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-analytics.js"></script>
+    <script>
+      var firebaseConfig = {
+        apiKey: "AIzaSyDrA683VyXyQO8AqHGdrFJOoMmx1be9svA",
+        authDomain: "plinkomaster-1ad16.firebaseapp.com",
+        databaseURL: "https://plinkomaster-1ad16.firebaseio.com",
+        projectId: "plinkomaster-1ad16",
+        storageBucket: "plinkomaster-1ad16.appspot.com",
+        messagingSenderId: "350096893615",
+        appId: "1:350096893615:web:d39adff52031940717165a",
+        measurementId: "G-WZJDL399QB",
+      };
+      firebase.initializeApp(firebaseConfig);
+      window.analytics = firebase.analytics();
+      window.analytics.logEvent("enter_invite_download");
+
+      function download() {
+        window.analytics.logEvent("click_invite_download");
+      }
+    </script>
     <title>Didabu</title>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div class="container">
-      <img src="https://marketing.gamemasterf9.com/static/images/top.png" />
-      <a href="">Download</a>
-      <div class="container" style="padding: 0 1rem">
-        <img
-          src="https://marketing.gamemasterf9.com/static/images/bottom.png"
-        />
+      <div style="position: relative">
+        <img src="./static/images/top.png" />
+        <div class="title">
+          <p>Play free game</p>
+          <p>MAKE MONEY</p>
+        </div>
+      </div>
+      <a onclick="download()" href="">Download</a>
+      <div class="container award_list">
+        <ul>
+          <!-- 用户奖励数据 -->
+          <li>
+            <img src="./static/images/bg.png" />
+            <span class="award_user">name1</span>
+            <span class="award_value">Receive $1</span>
+          </li>
+        </ul>
       </div>
     </div>
   </body>
