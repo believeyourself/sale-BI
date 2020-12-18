@@ -74,9 +74,11 @@ export default function Login(props) {
                     boundDevice: userInfo.platform,
                     originalMessage: JSON.stringify(authResponse)
                 }
+                console.log(authResponse)
                 window.FB.api('/me', async (response) => {
                     params.userName = response.name;
                     let { data } = await request.post("/thirdPartyUser/bind", params);
+                    console.log(response)
                     if (data.accountId) {
                         window.analytics.logEvent("click_fb_login_success");
                         setIsLogin(true);
