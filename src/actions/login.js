@@ -6,9 +6,14 @@ export const login = () => ({
 
 export const infoVerify = (base64UserInfo) => {
   return async (dispatch) => {
+    dispatch({
+      type: "INFO_VERIFY",
+      loading: true,
+    });
     let { data } = await request.post("/marketing/infoVerify", base64UserInfo);
     dispatch({
       type: "INFO_VERIFY_SUCCESS",
+      loading: false,
       useInfo: data,
     });
   };
