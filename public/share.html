@@ -124,7 +124,7 @@
       window.analytics = firebase.analytics();
       window.analytics.logEvent("enter_invite_download");
 
-      async function download() {
+      async function downloadApp() {
         await window.analytics.logEvent("click_invite_download");
       }
     </script>
@@ -139,7 +139,7 @@
           <p>MAKE MONEY</p>
         </div>
       </div>
-      <a onclick="download()" href="">Download</a>
+      <a onclick="downloadApp()" href="">Download</a>
       <div class="container award_list">
         <ul>
           <!-- 用户奖励数据 -->
