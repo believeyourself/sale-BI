@@ -116,7 +116,9 @@ export default function Home(props) {
     };
 
     useEffect(() => {
-        queryData();
+        if (base64UserInfo) {
+            queryData();
+        }
     }, []);
 
     const goToInvite = () => {
@@ -172,7 +174,7 @@ export default function Home(props) {
         let asset = userInfo.assets[i];
         let button = (<Button disabled className="cash_out_button" size="small">CASH OUT</Button>);
         if (asset.currentValue >= asset.targetValue) {
-            button = (<Button className="cash_out_button" size="small">CASH OUT</Button>);
+            button = (<Button onClick={() => window.location.hash = `/cashInfo/${processInfo.stage}/:${processInfo.userCampaignId}`} className="cash_out_button" size="small">CASH OUT</Button>);
         }
 
         assets.push((<Flex key={`${userInfo.appName}_assets_${asset.code}`} justify="start">
@@ -207,51 +209,54 @@ export default function Home(props) {
         }
     }
 
+    let inviteNodes = <React.Fragment>
+        <img className="play_video_btn" onClick={showVideo} src={playImg} />
+        <div ref={videoContainerRef} className="redeem_video">
+            <span onClick={hideVideo} className="close_icon">X</span>
+            <video
+                controls
+                ref={videoRef}
+                src={videoMp4}>
+            </video>
+        </div>
+        <img onClick={goToInvite} alt="" src={inviteBannerUrl} />
+        <WhiteSpace></WhiteSpace>
+        <Flex className="process" justify="around">
+            {avatarNode}
+            <Flex justify="around">{invites}</Flex>
+        </Flex>
+        <h3 style={{ paddingLeft: "15px", textAlign: "left" }}>My Games</h3>
+        <Flex className="user_game" justify="start">
+            <img alt="" className="avatar" src={GAME_ICON[userInfo.appName.toLowerCase()]} />
+            <Flex.Item>
+                <span>{userInfo.appName}</span>
+            </Flex.Item>
+            {
+                processInfo.canCashOut ?
+                    <Button type="link" href={`#/cashInfo/${processInfo.stage}/${processInfo.userCampaignId}`} size="small" className="cash_out_button">CASH OUT</Button>
+                    :
+                    <Button onClick={goToInvite} size="small" className="play_button">INVITE</Button>
+            }
+        </Flex>
+        <WhiteSpace></WhiteSpace>
+        <section className="user">
+            <Flex justify="start">
+                <img alt="" className="avatar" src={fbUrl} />
+                <Flex.Item>
+                    <span>{processInfo.name}</span>
+                </Flex.Item>
+            </Flex>
+            <WhiteSpace></WhiteSpace>
+            {assets}
+        </section>
+        <h3 style={{ paddingLeft: "15px", textAlign: "left" }}>Hot Games</h3>
+        <WhiteSpace></WhiteSpace>
+    </React.Fragment>
 
 
     return (
         <div className="home">
-            <img className="play_video_btn" onClick={showVideo} src={playImg} />
-            <div ref={videoContainerRef} className="redeem_video">
-                <span onClick={hideVideo} className="close_icon">X</span>
-                <video
-                    controls
-                    ref={videoRef}
-                    src={videoMp4}>
-                </video>
-            </div>
-            <img onClick={goToInvite} alt="" src={inviteBannerUrl} />
-            <WhiteSpace></WhiteSpace>
-            <Flex className="process" justify="around">
-                {avatarNode}
-                <Flex justify="around">{invites}</Flex>
-            </Flex>
-            <h3 style={{ paddingLeft: "15px", textAlign: "left" }}>My Games</h3>
-            <Flex className="user_game" justify="start">
-                <img alt="" className="avatar" src={GAME_ICON[userInfo.appName.toLowerCase()]} />
-                <Flex.Item>
-                    <span>{userInfo.appName}</span>
-                </Flex.Item>
-                {
-                    processInfo.canCashOut ?
-                        <Button type="link" href={`#/cashInfo/${processInfo.stage}/${processInfo.userCampaignId}`} size="small" className="cash_out_button">CASH OUT</Button>
-                        :
-                        <Button onClick={goToInvite} size="small" className="play_button">INVITE</Button>
-                }
-            </Flex>
-            <WhiteSpace></WhiteSpace>
-            <section className="user">
-                <Flex justify="start">
-                    <img alt="" className="avatar" src={fbUrl} />
-                    <Flex.Item>
-                        <span>{processInfo.name}</span>
-                    </Flex.Item>
-                </Flex>
-                <WhiteSpace></WhiteSpace>
-                {assets}
-            </section>
-            <h3 style={{ paddingLeft: "15px", textAlign: "left" }}>Hot Games</h3>
-            <WhiteSpace></WhiteSpace>
+            {base64UserInfo && inviteNodes}
             <Carousel className="hot_game_banner_container"
                 autoplay
                 infinite

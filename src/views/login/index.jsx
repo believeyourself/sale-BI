@@ -7,8 +7,8 @@ import "./index.css";
 import request from "../../utils/request";
 
 export default function Login(props) {
-    let { match } = props;
-    let base64UserInfo = decodeURIComponent(match.params?.userInfo);
+    let { params } = props.match;
+    let base64UserInfo = params.userInfo ? decodeURIComponent(params.userInfo) : "";
     const [loading, setLoading] = useState(false);
     const [isLogin, setIsLogin] = useState(false);
     const [userInfo, setUserInfo] = useState({});
@@ -53,7 +53,9 @@ export default function Login(props) {
     };
 
     useEffect(() => {
-        queryData();
+        if (params.userInfo) {
+            queryData();
+        }
     }, []);
 
 
@@ -74,11 +76,9 @@ export default function Login(props) {
                     boundDevice: userInfo.platform,
                     originalMessage: JSON.stringify(authResponse)
                 }
-                console.log(authResponse)
                 window.FB.api('/me', async (response) => {
                     params.userName = response.name;
                     let { data } = await request.post("/thirdPartyUser/bind", params);
-                    console.log(response)
                     if (data.accountId) {
                         window.analytics.logEvent("click_fb_login_success");
                         setIsLogin(true);
