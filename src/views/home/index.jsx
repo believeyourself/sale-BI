@@ -27,6 +27,7 @@ import plinkoGoBanner from "../../assets/plinkogo_banner.jpg";
 import bingGoBanner from "../../assets/binggo_banner.jpg";
 import plinkomaniaBanner from "../../assets/plinkomania_banner.jpg";
 import candyPusherBanner from "../../assets/candypusher_banner.jpg";
+import gift_card from "../../assets/gift_card.png";
 import videoMp4 from "../../assets/redeem.mp4";
 import "./index.css";
 
@@ -90,6 +91,7 @@ export default function Home(props) {
     let base64UserInfo = match.params?.userInfo;
     const videoRef = useRef(null);
     const videoContainerRef = useRef(null);
+    const [randomBanner, setRandomBanner] = useState(null)
     const [userInfo, setUserInfo] = useState({
         appName: "",
         assets: []
@@ -115,14 +117,24 @@ export default function Home(props) {
         Toast.hide();
     };
 
+
     useEffect(() => {
         if (base64UserInfo) {
+            let randomNum = Math.ceil(Math.random() * 100);
+            if (randomNum < 40) {
+                window.analytics.logEvent("cashout_invite_show");
+                setRandomBanner(<div className="random_banner">
+                    <img src={gift_card} />
+                    <p>You received $4</p>
+                    <Button onClick={() => goToInvite("click_cashout_invite")} size="small" type="primary">Cash out</Button>
+                </div>);
+            }
             queryData();
         }
     }, []);
 
-    const goToInvite = () => {
-        window.analytics.logEvent("click_invite");
+    const goToInvite = (event_name = 'click_invite') => {
+        window.analytics.logEvent(event_name);
         window.location.hash = `#/invite/${btoa(processInfo.promotionalLink)}`;
     }
     const goToDownload = (appName) => {
@@ -253,9 +265,9 @@ export default function Home(props) {
         <WhiteSpace></WhiteSpace>
     </React.Fragment>
 
-
     return (
         <div className="home">
+            {randomBanner}
             {base64UserInfo && inviteNodes}
             <Carousel className="hot_game_banner_container"
                 autoplay
