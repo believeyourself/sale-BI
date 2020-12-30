@@ -126,16 +126,16 @@ export default function Home(props) {
                 setRandomBanner(<div className="random_banner">
                     <img src={gift_card} />
                     <p>You received $4</p>
-                    <Button onClick={() => goToInvite("click_cashout_invite")} size="small" type="primary">Cash out</Button>
+                    <Button onClick={() => goToInvite("click_cashout_invite", 1)} size="small" type="primary">Cash out</Button>
                 </div>);
             }
             queryData();
         }
     }, []);
 
-    const goToInvite = (event_name = 'click_invite') => {
+    const goToInvite = (event_name = 'click_invite', from = 0) => {
         window.analytics.logEvent(event_name);
-        window.location.hash = `#/invite/${btoa(processInfo.promotionalLink)}`;
+        window.location.hash = `#/invite/${btoa(processInfo.promotionalLink)}/${from}`;
     }
     const goToDownload = (appName) => {
         window.analytics.logEvent(`click_${appName}_download`);

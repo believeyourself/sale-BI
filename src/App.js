@@ -10,7 +10,7 @@ function App() {
     <HashRouter>
       <Route exact path="/login/:userInfo?" component={Login}></Route>
       <Route exact path="/home/:userInfo?" component={Home}></Route>
-      <Route exact path="/invite/:shareUrl" component={Invite}></Route>
+      <Route exact path="/invite/:shareUrl/:from?" component={Invite}></Route>
       <Route
         exact
         path="/cashInfo/:stage/:userCampaignId"

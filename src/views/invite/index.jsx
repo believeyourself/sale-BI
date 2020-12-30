@@ -20,13 +20,19 @@ const info = [
 const Invite = (props) => {
     const emailContent = `Hi,How is it going？I'm playing the so funny game and need you help right now!Just help me download this game thorough the link and I can gain $1 immediately!%0dClick the link！👇👇👇(If link is not clickable, please copy and paste it into the address bar)%0d`;
     const shareUrl = atob(props.match.params.shareUrl);
+    const from = props.match.params.from;
     const randomIndex = Math.floor(Math.random() * info.length);
     const emailTitleIndex = Math.floor(Math.random() * 8);
     const randomInfo = info[randomIndex];
     const randomEmailTitle = info[emailTitleIndex];
 
     const copyUrl = () => {
-        window.analytics.logEvent("click_copy_url");
+        if (from == 1) {
+            window.analytics.logEvent("click_copy_url_cashout");
+        } else {
+            window.analytics.logEvent("click_copy_url");
+        }
+
         copy(`${randomInfo} Click the link！👇👇👇\n${shareUrl}`);
         Toast.success("Copy Success!Invite your best friends and win real money!");
     }
@@ -46,7 +52,7 @@ const Invite = (props) => {
             <Button onClick={copyUrl}>Copy Link</Button>
             <Button
                 type="link"
-                onClick={window.analytics.logEvent("click_share_with_email")}
+                onClick={from == 1 ? window.analytics.logEvent("click_share_with_email_cashout") : window.analytics.logEvent("click_share_with_email")}
                 href={`mailto:?subject=${randomEmailTitle}&body=${emailContent}${shareUrl}`}>
                 Share With Email
             </Button>
