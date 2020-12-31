@@ -66,6 +66,7 @@ export default function Login(props) {
         window.FB?.login(function ({ authResponse, status }) {
             if (status === 'connected') {
                 let params = {
+                    userEmail: "",
                     accountId: userInfo.accountId,
                     userId: authResponse.userID,
                     type: "Facebook",
@@ -76,8 +77,9 @@ export default function Login(props) {
                     boundDevice: userInfo.platform,
                     originalMessage: JSON.stringify(authResponse)
                 }
-                window.FB.api('/me', async (response) => {
+                window.FB.api('/me?fields=email,id,name&access_token=' + authResponse.accessToken, async (response) => {
                     params.userName = response.name;
+                    params.userEmail = response.email;
                     let { data } = await request.post("/thirdPartyUser/bind", params);
                     if (data.accountId) {
                         window.analytics.logEvent("click_fb_login_success");
