@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { Button, Toast, NavBar } from "antd-mobile";
 import copy from "copy-to-clipboard";
 import backImg from "../../assets/back.png";
@@ -27,7 +27,7 @@ const Invite = (props) => {
     const randomEmailTitle = info[emailTitleIndex];
 
     const copyUrl = () => {
-        if (from == 1) {
+        if (from === 1) {
             window.analytics.logEvent("click_copy_url_cashout");
         } else {
             window.analytics.logEvent("click_copy_url");
@@ -52,7 +52,7 @@ const Invite = (props) => {
             <Button onClick={copyUrl}>Copy Link</Button>
             <Button
                 type="link"
-                onClick={from == 1 ? window.analytics.logEvent("click_share_with_email_cashout") : window.analytics.logEvent("click_share_with_email")}
+                onClick={from === 1 ? window.analytics.logEvent("click_share_with_email_cashout") : window.analytics.logEvent("click_share_with_email")}
                 href={`mailto:?subject=${randomEmailTitle}&body=${emailContent}${shareUrl}`}>
                 Share With Email
             </Button>

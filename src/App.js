@@ -1,13 +1,10 @@
 import { HashRouter, Route } from "react-router-dom";
-import Login from "./views/login";
-import Home from "./views/home";
-import Invite from "./views/invite";
-import CashInfo from "./views/cashInfo";
-import Download from "./views/download";
+import { Login, Home, Invite, CashInfo, Download, Redeem } from "./views";
 
 function App() {
   return (
     <HashRouter>
+      <Route exact path="/redeem/:userInfo?" component={Redeem}></Route>
       <Route exact path="/login/:userInfo?" component={Login}></Route>
       <Route exact path="/home/:userInfo?" component={Home}></Route>
       <Route exact path="/invite/:shareUrl/:from?" component={Invite}></Route>
