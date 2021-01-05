@@ -40,7 +40,7 @@ export default function Redeem({ match }) {
               />
               <div className="jss7">
                 <p className="jss8">
-                  {assets[i].targetValue} = ${assets[i].award}
+                  {assets[i].targetValue} = ${assets[i].reward}
                 </p>
                 <div className="jss9">
                   <span className="user_coins">{assets[i].value}</span> /{" "}
@@ -49,7 +49,7 @@ export default function Redeem({ match }) {
               </div>
             </div>
             <div className="jss6 item-paypal-bg" onClick={checked}>
-              <p className="jss10">${assets[i].award}</p>
+              <p className="jss10">${assets[i].reward}</p>
             </div>
           </div>
         );
