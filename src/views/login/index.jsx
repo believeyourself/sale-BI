@@ -55,7 +55,6 @@ export default function Login(props) {
     }
 
     let { data } = await request.post("/marketing/infoVerify", base64UserInfo);
-    data.redeemType = 1;
     if (data?.redeemType == 1) {
       setIsRedeem(true);
       setData(data);
