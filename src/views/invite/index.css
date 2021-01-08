@@ -1,26 +1,36 @@
-.share {
-  position: absolute;
-  margin-left: 20vw;
-  margin-top: 1rem;
+.invite_container {
+  padding: 0 15px;
+  width: 100vw;
+  height: 100vh;
+}
+
+.share img {
+  width: 15vw;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 1rem 0 0.5rem 0;
+}
+.shareUrl {
+  border: 1px solid#bbb;
+}
+.download_btn {
+  position: fixed !important;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 75vh;
   width: 60vw;
-  bottom: 10vh;
-}
-
-.share a {
-  margin: 1rem 0;
   color: #fff;
-  background: linear-gradient(to Right, #3a56a0, #5b86fd);
-  z-index: 999;
+  font-weight: bold;
+  background: linear-gradient(to Bottom, #f1e553, #feb912);
 }
-
 .back {
   width: 2rem;
   height: 2rem;
-}
-
-.invite {
-  background-image: url("../../assets/arcadepusher_poster.jpg");
-  width: 100vw;
-  height: calc(100vh - 45px);
-  background-size: 100% 100%;
 }

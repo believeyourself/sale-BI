@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Result } from "antd-mobile";
 import "./index.css";
 import config from "../../config/config";
+import Axios from "axios";
 
 export default function Redeem({ match }) {
   const { userInfo } = match.params;
   let gameInfo = null;
   let assetNods = [];
+  const [hotGames, setHotGames] = useState([]);
 
   const checked = () => {
     Modal.alert(
@@ -16,11 +18,16 @@ export default function Redeem({ match }) {
     );
   };
 
+  useEffect(() => {
+    Axios.get(`${config.gameResourceUrl}config.json`).then(({ data }) => {
+      setHotGames(data?.hotGames);
+    });
+  });
   try {
     let user = JSON.parse(atob(userInfo));
     let { appName: gameName, assets } = user;
-    for (let i = 0; i < config.hotGames.length; ++i) {
-      let game = config.hotGames[i];
+    for (let i = 0; i < hotGames.length; ++i) {
+      let game = hotGames[i];
       if (gameName.toLowerCase() === game.name.toLowerCase()) {
         gameInfo = game;
         break;
@@ -29,15 +36,12 @@ export default function Redeem({ match }) {
 
     if (gameName && gameInfo) {
       for (let i = 0; i < assets.length; ++i) {
-        let code = Number(assets[i].code);
+        let code = assets[i].code;
+        let assetIconUrl = `${config.gameResourceUrl}${gameName}/assets_${code}.png`;
         assetNods.push(
           <div key={code} className="jss3">
             <div className="jss5 item-wbg">
-              <img
-                alt="icon"
-                src={gameInfo.assets[code]?.default}
-                className="jss4"
-              />
+              <img alt="icon" src={assetIconUrl} className="jss4" />
               <div className="jss7">
                 <p className="jss8">
                   {assets[i].targetValue} = ${assets[i].reward}
@@ -60,13 +64,16 @@ export default function Redeem({ match }) {
     return <Result title="something went wrong!"></Result>;
   }
 
+  let iconUrl =
+    gameInfo &&
+    `${config.gameResourceUrl}${gameInfo.name?.toLowerCase()}/icon.png`;
   return (
     <div id="root">
       <header className="jss12">
         <div className="jss13"></div>
         <div className="jss16">
           <div className="jss17">
-            <img alt="icon" src={gameInfo?.icon.default} />
+            <img alt="icon" src={iconUrl} />
           </div>
           <span className="jss15">Cash Out</span>
         </div>

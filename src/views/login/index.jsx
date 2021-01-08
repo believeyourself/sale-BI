@@ -24,58 +24,35 @@ export default function Login(props) {
   const [isLogin, setIsLogin] = useState(false);
   const [userInfo, setUserInfo] = useState({});
   useEffect(() => {
-    (function (d, s, id) {
-      var js,
-        fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) {
-        return;
-      }
-      js = d.createElement(s);
-      js.id = id;
-      js.src = "https://connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    })(document, "script", "facebook-jssdk");
-
-    window.fbAsyncInit = () => {
-      window.FB?.init({
-        appId: "1026987934476519",
-        cookie: true,
-        xfbml: true,
-        version: "v9.0",
-      });
-    };
-
     window.analytics.logEvent("enter_login_page");
   }, []);
 
-  const queryData = async () => {
-    if (!base64UserInfo) {
-      Toast.fail("invalid params!");
-      return;
-    }
-
-    let { data } = await request.post("/marketing/infoVerify", base64UserInfo);
-    if (data?.redeemType == 1) {
-      setIsRedeem(true);
-      setData(data);
-    } else {
-      if (data?.facebookBound) {
-        setIsLogin(true);
-      }
-
-      setUserInfo({
-        accountId: data.accountId,
-        platform: data.platform,
-      });
-    }
-    setFirstIn(false);
-  };
-
   useEffect(() => {
     if (params.userInfo && firstIn) {
+      const queryData = async () => {
+        let { data } = await request.post(
+          "/marketing/infoVerify",
+          base64UserInfo
+        );
+        data.redeemType = 1;
+        if (data?.redeemType === 1) {
+          setIsRedeem(true);
+          setData(data);
+        } else {
+          if (data?.facebookBound) {
+            setIsLogin(true);
+          }
+
+          setUserInfo({
+            accountId: data.accountId,
+            platform: data.platform,
+          });
+        }
+        setFirstIn(false);
+      };
       queryData();
     }
-  }, []);
+  }, [params.userInfo, firstIn]);
 
   function handleFbLogin() {
     setLoading(true);
@@ -138,6 +115,11 @@ export default function Login(props) {
     return <Redirect to={`/redeem/${btoa(JSON.stringify(data))}`} />;
   }
 
+  //未传玩家数据直接跳转主页
+  if (!params.userInfo) {
+    return <Redirect to="/home" />;
+  }
+
   //已经绑定了facebook就跳过登录
   if (isLogin) {
     return <Redirect to={`/home/${base64UserInfo}`} />;
@@ -151,9 +133,9 @@ export default function Login(props) {
       <h1>RECEIVE</h1>
       <h1 className="money">CASH PRIZE</h1>
       <p>
-        Invite 3 friends for <span style={{ color: "#116aad" }}>$1</span>.<br />
-        10 friends for <span style={{ color: "#116aad" }}>$4</span>.
+        Invite friends for <span style={{ color: "#116aad" }}>$50</span>.
       </p>
+      <WhiteSpace size="xl"></WhiteSpace>
       <Button
         style={{
           width: "70vw",
