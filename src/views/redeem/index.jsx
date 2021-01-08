@@ -41,7 +41,7 @@ export default function Redeem({ match }) {
         assetNods.push(
           <div key={code} className="jss3">
             <div className="jss5 item-wbg">
-              <img alt="icon" src={assetIconUrl} className="jss4" />
+              <img alt="" src={assetIconUrl} className="jss4" />
               <div className="jss7">
                 <p className="jss8">
                   {assets[i].targetValue} = ${assets[i].reward}
