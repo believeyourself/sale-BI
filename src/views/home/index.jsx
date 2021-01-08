@@ -201,9 +201,12 @@ export default function Home(props) {
       <img onClick={goToInvite} alt="" src={inviteBannerUrl} />
       <WhiteSpace></WhiteSpace>
       <div>
-        <Progress position="normal" percent="60" />
+        <Progress
+          position="normal"
+          percent={processInfo.currentValue / processInfo.finalValue}
+        />
         <WhiteSpace></WhiteSpace>${processInfo.currentValue} / $
-        {processInfo.finalValue}
+        {processInfo.finalValue / 100}
       </div>
       <h3 style={{ paddingLeft: "15px", textAlign: "left" }}>My Games</h3>
       <Flex className="user_game" justify="start">

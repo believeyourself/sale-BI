@@ -22,7 +22,7 @@ export default function Redeem({ match }) {
     Axios.get(`${config.gameResourceUrl}config.json`).then(({ data }) => {
       setHotGames(data?.hotGames);
     });
-  });
+  }, []);
   try {
     let user = JSON.parse(atob(userInfo));
     let { appName: gameName, assets } = user;
