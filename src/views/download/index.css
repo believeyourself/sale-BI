@@ -1,5 +1,8 @@
 .download_btn {
-  margin: 0 auto;
+  position: fixed !important;
+  margin: auto;
+  left: 0;
+  right: 0;
   top: 75vh;
   width: 60vw;
   color: #fff;
@@ -8,10 +11,14 @@
 }
 .back {
   width: 2rem;
+  height: 2rem;
 }
 
-.download_bg {
+.poster {
   width: 100vw;
-  height: calc(100vh - 45px);
-  background-size: 100% 100%;
+}
+
+.download_container {
+  height: 100vh;
+  overflow-y: scroll;
 }
