@@ -11,92 +11,27 @@ import { Redirect } from "react-router-dom";
 import iconUrl from "../../assets/icon.png";
 import loginUrl from "../../assets/login.png";
 import "./index.css";
-import { infoVerify } from "../../actions/login"
+import { infoVerify,bindUser } from "../../actions/login"
 import request from "../../utils/request"
 
 function Login(props) {
+  console.log(props)
   let { params } = props.match;
+  const {loading,handleLogin,infoVerify,useInfo} = props;
   let base64UserInfo = params.userInfo
     ? decodeURIComponent(params.userInfo)
     : "";
-  const [loading, setLoading] = useState(false);
-  const [firstIn, setFirstIn] = useState(true);
-  const [isRedeem, setIsRedeem] = useState(false);
-  const [data, setData] = useState({ assets: [] });
-  const [isLogin, setIsLogin] = useState(false);
-  const [userInfo, setUserInfo] = useState({});
   useEffect(() => {
     window.analytics.logEvent("enter_login_page");
   }, []);
 
   useEffect(() => {
-    if (params.userInfo && firstIn) {
-      const queryData = async () => {
-        let { data } = await request.post(
-          "/marketing/infoVerify",
-          base64UserInfo
-        );
-        if (data?.redeemType === 1) {
-          setIsRedeem(true);
-          setData(data);
-        } else {
-          if (data?.facebookBound) {
-            setIsLogin(true);
-          }
-
-
-          setUserInfo({
-            accountId: data.accountId,
-            platform: data.platform,
-          });
-        }
-        setFirstIn(false);
-      };
-      queryData();
+    if (params.userInfo && isNaN(useInfo?.redeemType)) {
+      infoVerify(params.userInfo);
     }
-  }, [params.userInfo, firstIn]);
+  }, [params.userInfo]);
 
-  function handleFbLogin() {
-    setLoading(true);
-    window.analytics.logEvent("click_fb_login");
-    window.FB?.login(
-      function ({ authResponse, status }) {
-        if (status === "connected") {
-          let params = {
-            userEmail: "",
-            accountId: userInfo.accountId,
-            userId: authResponse.userID,
-            type: "Facebook",
-            appId: "1026987934476519",
-            token: authResponse.accessToken,
-            userName: "",
-            platform: userInfo.platform,
-            boundDevice: userInfo.platform,
-            originalMessage: JSON.stringify(authResponse),
-          };
-          window.FB.api(
-            "/me?fields=email,id,name&access_token=" + authResponse.accessToken,
-            async (response) => {
-              params.userName = response.name;
-              params.userEmail = response.email;
-              let { data } = await request.post("/thirdPartyUser/bind", params);
-              if (data.accountId) {
-                window.analytics.logEvent("click_fb_login_success");
-                setIsLogin(true);
-              }
-            }
-          );
-        } else {
-          window.analytics.logEvent("click_fb_login_failed");
-          Toast.Fail("facebook login failed!");
-        }
-        setLoading(false);
-      },
-      { scope: "public_profile,email" }
-    );
-  }
-
-  if (firstIn && base64UserInfo !== "") {
+  if (isNaN(useInfo?.redeemType) && base64UserInfo !== "") {
     return (
       <div
         style={{
@@ -113,8 +48,8 @@ function Login(props) {
   }
 
   //跳转体现页面
-  if (isRedeem) {
-    return <Redirect to={`/redeem/${btoa(JSON.stringify(data))}`} />;
+  if (useInfo?.redeemType == 1) {
+    return <Redirect to={`/redeem/${btoa(JSON.stringify(useInfo))}`} />;
   }
 
   //未传玩家数据直接跳转主页
@@ -123,9 +58,9 @@ function Login(props) {
   }
 
   //已经绑定了facebook就跳过登录
-  // if (useInfo.facebookBound) {
-  //     return <Redirect to={`/home/${base64UserInfo}`} />
-  // }
+  if (useInfo?.facebookBound) {
+      return <Redirect to={`/home/${base64UserInfo}`} />
+  }
 
   return (
     <Flex align="center" justify="center" className="login" direction="column">
@@ -144,7 +79,7 @@ function Login(props) {
           backgroundImage: `url(${loginUrl})`,
           backgroundSize: "100% 100%",
         }}
-        onClick={handleFbLogin}
+        onClick={() =>handleLogin(useInfo)}
         disabled={loading}
         loading={loading}
       ></Button>
@@ -158,8 +93,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  login: () => {
-      dispatch({ type: "LOGIN" })
+  handleLogin: (userInfo) => {
+      dispatch(bindUser(userInfo))
   },
   infoVerify: (base64Info) => {
       dispatch(infoVerify(base64Info))
