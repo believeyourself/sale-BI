@@ -61,9 +61,7 @@ function Home(props) {
 
   const goToInvite = (event_name = "click_invite", from = 0) => {
     window.analytics.logEvent(event_name);
-    window.location.hash = `#/invite/${btoa(
-      inviteInfo.promotionalLink
-    )}/${from}`;
+    window.location.hash = `#/invite/${from}`;
   };
   const goToDownload = (appName) => {
     window.analytics.logEvent(`click_${appName}_download`);

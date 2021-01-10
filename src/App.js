@@ -6,8 +6,20 @@ import * as reducers from "./reducers"
 import thunk from "redux-thunk"
 import { Login, Home, Invite, CashInfo, Download, Redeem } from "./views";
 
+//redux缓存避免页面刷新数据丢失
+import {persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import {PersistGate} from 'redux-persist/integration/react';
+
+const rootReducer = persistReducer({
+  key: 'root',
+  storage
+}, combineReducers(reducers));
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(combineReducers(reducers), composeEnhancers(applyMiddleware(thunk)));
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
+const persistor = persistStore(store);
+
+//store状态监听
 store.subscribe(() => {
   console.log("==========",store.getState());
 });
@@ -39,11 +51,12 @@ function App() {
 
   return (
 <Provider store={store}>
-    <HashRouter>
+<PersistGate loading={null} persistor={persistor}>
+<HashRouter>
       <Route exact path="/redeem/:userInfo?" component={Redeem}></Route>
       <Route exact path="/login/:userInfo?" component={Login}></Route>
       <Route exact path="/home" component={Home}></Route>
-      <Route exact path="/invite/:shareUrl/:from?" component={Invite}></Route>
+      <Route exact path="/invite/:from?" component={Invite}></Route>
       <Route
         exact
         path="/cashInfo/:stage/:userCampaignId"
@@ -51,6 +64,8 @@ function App() {
       ></Route>
       <Route exact path="/download/:game" component={Download}></Route>
     </HashRouter>
+          </PersistGate>
+    
     </Provider>
   );
 }
