@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 import { HashRouter, Route } from "react-router-dom";
-import {createStore,applyMiddleware} from "redux"
+import {createStore,applyMiddleware,compose,combineReducers} from "redux"
 import { Provider } from "react-redux";
-import {reducer} from "./reducers/login"
+import * as reducers from "./reducers"
 import thunk from "redux-thunk"
 import { Login, Home, Invite, CashInfo, Download, Redeem } from "./views";
 
-const store = createStore(reducer, applyMiddleware(thunk));
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(combineReducers(reducers), composeEnhancers(applyMiddleware(thunk)));
 store.subscribe(() => {
-  console.log(store.getState());
+  console.log("==========",store.getState());
 });
 
 function App() {
@@ -41,7 +42,7 @@ function App() {
     <HashRouter>
       <Route exact path="/redeem/:userInfo?" component={Redeem}></Route>
       <Route exact path="/login/:userInfo?" component={Login}></Route>
-      <Route exact path="/home/:userInfo?" component={Home}></Route>
+      <Route exact path="/home" component={Home}></Route>
       <Route exact path="/invite/:shareUrl/:from?" component={Invite}></Route>
       <Route
         exact

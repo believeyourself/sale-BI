@@ -1,66 +1,42 @@
 import React, { useState, useEffect, useRef } from "react";
+import {connect} from "react-redux";
 import {
   WhiteSpace,
   Button,
   Flex,
-  Toast,
   Carousel,
   Progress,
   Modal,
 } from "antd-mobile";
 import ContactUs from "../../components/contactUs";
-import request from "../../utils/request";
+import {getUserCaimpagn} from "../../actions/user"
+import {getConfig} from "../../actions/global"
 
 //图片
 import inviteBannerUrl from "../../assets/invite_banner.jpg";
 import playImg from "../../assets/play.png";
 import fbUrl from "../../assets/facebook.png";
 import gift_card from "../../assets/gift_card.png";
+
 import videoMp4 from "../../assets/redeem.mp4";
 import "./index.css";
 import config from "../../config/config";
-import Axios from "axios";
 
-export default function Home(props) {
-  let { match } = props;
-  let base64UserInfo = match.params?.userInfo;
+const DEFAULT_INVITE_INFO = {}
+const DEFAULT_GLOBAL_CONFIG = {hotGames:[]}
+
+function Home(props) {
+  let { inviteInfo,userInfo,getUserCaimpagn,hotGames,getConfig } = props;
   const videoRef = useRef(null);
   const videoContainerRef = useRef(null);
   const [randomBanner, setRandomBanner] = useState(null);
-  const [hotGames, setHotGames] = useState([]);
   const [envelopStatus, setEnvelopStatus] = useState(ENVELOP_STATUS.closed);
-  const [userInfo, setUserInfo] = useState({
-    appName: "",
-    assets: [],
-  });
-  const [processInfo, setProcessInfo] = useState({
-    currentValue: 0,
-    name: "--",
-  });
   const userGameName = userInfo.appName?.toLowerCase();
 
   useEffect(() => {
-    if (base64UserInfo) {
-      const queryData = async () => {
-        Toast.loading("Loading...", 30);
-        let { data: userInfo } = await request.post(
-          "/marketing/infoVerify",
-          base64UserInfo
-        );
-
-        let { data: processInfo } = await request.get(
-          `/marketing/campaigns?accountId=${userInfo.accountId}&appName=${userInfo.appName}`
-        );
-
-        if (processInfo.theFirst) {
-          setEnvelopStatus(ENVELOP_STATUS.pending);
-        }
-
-        setUserInfo(userInfo);
-        setProcessInfo(processInfo);
-        Toast.hide();
-      };
-
+    if (userInfo) {
+      getUserCaimpagn(userInfo)
+      getConfig();
       let randomNum = Math.ceil(Math.random() * 100);
       if (randomNum < 40) {
         window.analytics.logEvent("cashout_invite_show");
@@ -78,18 +54,15 @@ export default function Home(props) {
           </div>
         );
       }
-      queryData();
     }
 
-    Axios.get(`${config.gameResourceUrl}config.json`).then(({ data }) => {
-      setHotGames(data?.hotGames);
-    });
-  }, [base64UserInfo]);
+   
+  }, [userInfo]);
 
   const goToInvite = (event_name = "click_invite", from = 0) => {
     window.analytics.logEvent(event_name);
     window.location.hash = `#/invite/${btoa(
-      processInfo.promotionalLink
+      inviteInfo.promotionalLink
     )}/${from}`;
   };
   const goToDownload = (appName) => {
@@ -121,7 +94,7 @@ export default function Home(props) {
       button = (
         <Button
           onClick={() =>
-            (window.location.hash = `/cashInfo/${processInfo.stage}/:${processInfo.userCampaignId}`)
+            (window.location.hash = `/cashInfo/${inviteInfo?.stage}/:${inviteInfo?.userCampaignId}`)
           }
           className="cash_out_button"
           size="small"
@@ -203,10 +176,10 @@ export default function Home(props) {
       <div>
         <Progress
           position="normal"
-          percent={processInfo.currentValue / processInfo.finalValue}
+          percent={inviteInfo?.currentValue / inviteInfo?.finalValue * 100}
         />
-        <WhiteSpace></WhiteSpace>${processInfo.currentValue} / $
-        {processInfo.finalValue / 100}
+        <WhiteSpace></WhiteSpace>${inviteInfo?.currentValue} / $
+        {inviteInfo?.finalValue / 100}
       </div>
       <h3 style={{ paddingLeft: "15px", textAlign: "left" }}>My Games</h3>
       <Flex className="user_game" justify="start">
@@ -214,13 +187,13 @@ export default function Home(props) {
         <Flex.Item>
           <span>{userInfo.appName}</span>
         </Flex.Item>
-        {processInfo.canCashOut ? (
+        {inviteInfo.canCashOut ? (
           <Button
             type="link"
-            href={`#/cashInfo/${processInfo.stage}/${processInfo.userCampaignId}`}
+            href={`#/cashInfo/${inviteInfo.stage}/${inviteInfo.userCampaignId}`}
             size="small"
             className="cash_out_button"
-          ></Button>
+          > CASH OUT</Button>
         ) : (
           <Button onClick={goToInvite} size="small" className="cash_out_button">
             CASH OUT
@@ -232,7 +205,7 @@ export default function Home(props) {
         <Flex justify="start">
           <img alt="" className="avatar" src={fbUrl} />
           <Flex.Item>
-            <span>{processInfo.name}</span>
+            <span>{inviteInfo.name}</span>
           </Flex.Item>
         </Flex>
         <WhiteSpace></WhiteSpace>
@@ -246,7 +219,7 @@ export default function Home(props) {
   return (
     <div className="home">
       {randomBanner}
-      {base64UserInfo && inviteNodes}
+      {userInfo && inviteNodes}
       <Carousel className="hot_game_banner_container" autoplay infinite>
         {banners}
       </Carousel>
@@ -300,3 +273,15 @@ const ENVELOP_STATUS = {
   received: 2, //已领取
   closed: 3, //关闭领取
 };
+
+const mapStateToProps = ({user,global},ownProps)=>({
+  userInfo:user.userInfo,
+  inviteInfo:user.inviteInfo || DEFAULT_INVITE_INFO,
+  hotGames:global.hotGames || []
+});
+const mapDispatchToProps = (dispatch,ownProps)=>({
+  getUserCaimpagn: (useInfo) => dispatch(getUserCaimpagn(useInfo)),
+  getConfig: () => dispatch(getConfig()),
+});
+
+export default connect(mapStateToProps,mapDispatchToProps)(Home); 

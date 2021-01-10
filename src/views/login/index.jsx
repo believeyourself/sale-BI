@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import {
   Button,
   Flex,
-  Toast,
   WhiteSpace,
   ActivityIndicator,
 } from "antd-mobile";
@@ -11,27 +10,25 @@ import { Redirect } from "react-router-dom";
 import iconUrl from "../../assets/icon.png";
 import loginUrl from "../../assets/login.png";
 import "./index.css";
-import { infoVerify,bindUser } from "../../actions/login"
-import request from "../../utils/request"
+import { infoVerify,bindUser } from "../../actions/user"
 
 function Login(props) {
-  console.log(props)
   let { params } = props.match;
-  const {loading,handleLogin,infoVerify,useInfo} = props;
+  const {loading,handleLogin,infoVerify,userInfo} = props;
   let base64UserInfo = params.userInfo
     ? decodeURIComponent(params.userInfo)
-    : "";
+    : null;
   useEffect(() => {
     window.analytics.logEvent("enter_login_page");
   }, []);
 
   useEffect(() => {
-    if (params.userInfo && isNaN(useInfo?.redeemType)) {
+    if (params.userInfo && isNaN(userInfo?.redeemType)) {
       infoVerify(params.userInfo);
     }
   }, [params.userInfo]);
 
-  if (isNaN(useInfo?.redeemType) && base64UserInfo !== "") {
+  if (isNaN(userInfo?.redeemType) && !base64UserInfo) {
     return (
       <div
         style={{
@@ -48,8 +45,8 @@ function Login(props) {
   }
 
   //跳转体现页面
-  if (useInfo?.redeemType == 1) {
-    return <Redirect to={`/redeem/${btoa(JSON.stringify(useInfo))}`} />;
+  if (userInfo?.redeemType == 1) {
+    return <Redirect to={`/redeem/${btoa(JSON.stringify(userInfo))}`} />;
   }
 
   //未传玩家数据直接跳转主页
@@ -58,8 +55,9 @@ function Login(props) {
   }
 
   //已经绑定了facebook就跳过登录
-  if (useInfo?.facebookBound) {
-      return <Redirect to={`/home/${base64UserInfo}`} />
+  console.log(userInfo)
+  if (userInfo?.facebookBound) {
+      return <Redirect to={`/home`} />
   }
 
   return (
@@ -79,7 +77,7 @@ function Login(props) {
           backgroundImage: `url(${loginUrl})`,
           backgroundSize: "100% 100%",
         }}
-        onClick={() =>handleLogin(useInfo)}
+        onClick={() =>handleLogin(userInfo)}
         disabled={loading}
         loading={loading}
       ></Button>
@@ -87,9 +85,9 @@ function Login(props) {
   );
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  useInfo: state.useInfo,
-  loading: state.loading
+const mapStateToProps = ({user}, ownProps) => ({
+  userInfo: user.userInfo,
+  loading: user.loading
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

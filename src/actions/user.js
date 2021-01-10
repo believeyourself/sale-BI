@@ -1,9 +1,5 @@
 import request from "../utils/request";
 import {Toast} from "antd-mobile"
-export const login = () => ({
-  type: "LOGIN_SUCCESS",
-  useInfo: "test",
-});
 
 export const infoVerify = (base64UserInfo) => {
   return async (dispatch) => {
@@ -15,13 +11,12 @@ export const infoVerify = (base64UserInfo) => {
     dispatch({
       type: "INFO_VERIFY_SUCCESS",
       loading: false,
-      useInfo: data,
+      userInfo: data,
     });
   };
 };
 
 export const bindUser = (userInfo) => {
-  console.log("=========",userInfo)
   return async (dispatch) => {
     dispatch({
       type: "BIND_USER",
@@ -74,3 +69,22 @@ export const bindUser = (userInfo) => {
   };
 };
 
+export const getUserCaimpagn = (userInfo)=>{
+  return async dispatch => {
+      dispatch({
+          type: "GET_USER_CAMPAOGNS",
+          loading: true,
+        });
+      Toast.loading("Loading...", 30);
+      let { data } = await request.get(
+        `/marketing/campaigns?accountId=${userInfo.accountId}&appName=${userInfo.appName}`
+      );
+
+      dispatch({
+          type: "GET_USER_CAMPAOGNS_SUCCESS",
+          loading: false,
+          inviteInfo: data
+        });
+      Toast.hide();
+  }
+}
