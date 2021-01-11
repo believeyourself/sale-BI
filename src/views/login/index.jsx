@@ -9,19 +9,27 @@ import { infoVerify, bindUser } from "../../actions/user";
 
 function Login(props) {
   let { params } = props.match;
-  const { loading, handleLogin, infoVerify, userInfo } = props;
+  let {
+    loading,
+    handleLogin,
+    infoVerify,
+    userInfo,
+    cachedBase64UserInfo,
+  } = props;
   let base64UserInfo = params.userInfo
     ? decodeURIComponent(params.userInfo)
     : null;
+
+  //缓存数据与参数不一致时不适用缓存
+  if (base64UserInfo != cachedBase64UserInfo) {
+    userInfo = {};
+  }
   useEffect(() => {
     window.analytics.logEvent("enter_login_page");
-  }, []);
-
-  useEffect(() => {
     if (params.userInfo && isNaN(userInfo?.redeemType)) {
       infoVerify(params.userInfo);
     }
-  }, [params.userInfo]);
+  }, []);
 
   if (isNaN(userInfo?.redeemType) && !base64UserInfo) {
     return (
@@ -81,6 +89,7 @@ function Login(props) {
 
 const mapStateToProps = ({ user }, ownProps) => ({
   userInfo: user.userInfo,
+  cachedBase64UserInfo: user.base64UserInfo,
   loading: user.loading,
 });
 

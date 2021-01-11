@@ -1,5 +1,5 @@
 import request from "../utils/request";
-import {Toast} from "antd-mobile"
+import { Toast } from "antd-mobile";
 
 export const infoVerify = (base64UserInfo) => {
   return async (dispatch) => {
@@ -12,6 +12,7 @@ export const infoVerify = (base64UserInfo) => {
       type: "INFO_VERIFY_SUCCESS",
       loading: false,
       userInfo: data,
+      base64UserInfo,
     });
   };
 };
@@ -48,10 +49,10 @@ export const bindUser = (userInfo) => {
                 window.analytics.logEvent("click_fb_login_success");
                 userInfo.facebookBound = true;
                 dispatch({
-                  type:"BIND_USER_SUCCESS",
-                  loading:false,
-                  userInfo
-                })
+                  type: "BIND_USER_SUCCESS",
+                  loading: false,
+                  userInfo,
+                });
               }
             }
           );
@@ -59,9 +60,9 @@ export const bindUser = (userInfo) => {
           window.analytics.logEvent("click_fb_login_failed");
           Toast.Fail("facebook login failed!");
           dispatch({
-            type:"BIND_USER_FAIL",
-            loading:false
-          })
+            type: "BIND_USER_FAIL",
+            loading: false,
+          });
         }
       },
       { scope: "public_profile,email" }
@@ -69,22 +70,22 @@ export const bindUser = (userInfo) => {
   };
 };
 
-export const getUserCaimpagn = (userInfo)=>{
-  return async dispatch => {
-      dispatch({
-          type: "GET_USER_CAMPAOGNS",
-          loading: true,
-        });
-      Toast.loading("Loading...", 30);
-      let { data } = await request.get(
-        `/marketing/campaigns?accountId=${userInfo.accountId}&appName=${userInfo.appName}`
-      );
+export const getUserCaimpagn = (userInfo) => {
+  return async (dispatch) => {
+    dispatch({
+      type: "GET_USER_CAMPAOGNS",
+      loading: true,
+    });
+    Toast.loading("Loading...", 30);
+    let { data } = await request.get(
+      `/marketing/campaigns?accountId=${userInfo.accountId}&appName=${userInfo.appName}`
+    );
 
-      dispatch({
-          type: "GET_USER_CAMPAOGNS_SUCCESS",
-          loading: false,
-          inviteInfo: data
-        });
-      Toast.hide();
-  }
-}
+    dispatch({
+      type: "GET_USER_CAMPAOGNS_SUCCESS",
+      loading: false,
+      inviteInfo: data,
+    });
+    Toast.hide();
+  };
+};

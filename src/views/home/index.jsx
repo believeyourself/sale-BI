@@ -217,7 +217,6 @@ function Home(props) {
 
   return (
     <div className="home">
-      {randomBanner}
       {userInfo && inviteNodes}
       <Carousel className="hot_game_banner_container" autoplay infinite>
         {banners}
