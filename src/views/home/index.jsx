@@ -7,6 +7,7 @@ import {
   Carousel,
   Progress,
   Modal,
+  NoticeBar,
 } from "antd-mobile";
 import ContactUs from "../../components/contactUs";
 import { getUserCaimpagn } from "../../actions/user";
@@ -160,6 +161,11 @@ function Home(props) {
       : null;
   let inviteNodes = (
     <React.Fragment>
+      <NoticeBar marqueeProps={{ loop: true, style: { padding: "0 7.5px" } }}>
+        Dear all players, the last invitation activity is completed. A new huge
+        invitation activity for $50 is luanched, join us!!
+      </NoticeBar>
+      <WhiteSpace></WhiteSpace>
       {randomBanner}
       <img className="play_video_btn" onClick={showVideo} src={playImg} />
       <div ref={videoContainerRef} className="redeem_video">
