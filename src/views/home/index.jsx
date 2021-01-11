@@ -191,6 +191,7 @@ export default function Home(props) {
       : null;
   let inviteNodes = (
     <React.Fragment>
+      {randomBanner}
       <img className="play_video_btn" onClick={showVideo} src={playImg} />
       <div ref={videoContainerRef} className="redeem_video">
         <span onClick={hideVideo} className="close_icon">
@@ -220,7 +221,9 @@ export default function Home(props) {
             href={`#/cashInfo/${processInfo.stage}/${processInfo.userCampaignId}`}
             size="small"
             className="cash_out_button"
-          ></Button>
+          >
+            CASH OUT
+          </Button>
         ) : (
           <Button onClick={goToInvite} size="small" className="cash_out_button">
             CASH OUT
@@ -245,7 +248,6 @@ export default function Home(props) {
 
   return (
     <div className="home">
-      {randomBanner}
       {base64UserInfo && inviteNodes}
       <Carousel className="hot_game_banner_container" autoplay infinite>
         {banners}
