@@ -1,0 +1,51 @@
+{
+  "appName": "slotsgo",
+  "config": [
+    {
+      "total": 5000,
+      "initial": 3500,
+      "name": "lucky",
+      "weight": 20,
+      "rewards": [
+        { "invites": 1, "rate": 500 },
+        { "invites": 2, "rate": 500 },
+        { "invites": 3, "rate": 400 },
+        { "invites": 4, "rate": 400 },
+        { "invites": 5, "rate": 400 },
+        { "invites": 6, "rate": 300 },
+        { "invites": 7, "rate": 300 },
+        { "invites": 8, "rate": 200 },
+        { "invites": 9, "rate": 200 },
+        { "invites": 10, "rate": 1000 }
+      ]
+    },
+    {
+      "total": 5000,
+      "initial": 3500,
+      "name": "unlucky",
+      "weight": 80,
+      "rewards": [
+        { "invites": 1, "rate": 300 },
+        { "invites": 2, "rate": 300 },
+        { "invites": 3, "rate": 300 },
+        { "invites": 4, "rate": 200 },
+        { "invites": 5, "rate": 200 },
+        { "invites": 6, "rate": 200 },
+        { "invites": 7, "rate": 200 },
+        { "invites": 8, "rate": 200 },
+        { "invites": 9, "rate": 200 },
+        { "invites": 10, "rate": 100 },
+        { "invites": 11, "rate": 100 },
+        { "invites": 12, "rate": 100 },
+        { "invites": 13, "rate": 100 },
+        { "invites": 14, "rate": 100 },
+        { "invites": 15, "rate": 100 },
+        { "invites": 16, "rate": 100 },
+        { "invites": 17, "rate": 100 },
+        { "invites": 18, "rate": 100 },
+        { "invites": 19, "rate": 100 },
+        { "invites": 20, "rate": 1000 }
+      ]
+    }
+  ]
+}

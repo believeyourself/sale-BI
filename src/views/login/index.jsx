@@ -1,99 +1,29 @@
+import { connect } from "react-redux";
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Flex,
-  Toast,
-  WhiteSpace,
-  ActivityIndicator,
-} from "antd-mobile";
+import { Button, Flex, WhiteSpace, ActivityIndicator } from "antd-mobile";
 import { Redirect } from "react-router-dom";
 import iconUrl from "../../assets/icon.png";
 import loginUrl from "../../assets/login.png";
 import "./index.css";
-import request from "../../utils/request";
+import { infoVerify, bindUser } from "../../actions/user";
 
-export default function Login(props) {
+function Login(props) {
   let { params } = props.match;
+  const { loading, handleLogin, infoVerify, userInfo } = props;
   let base64UserInfo = params.userInfo
     ? decodeURIComponent(params.userInfo)
-    : "";
-  const [loading, setLoading] = useState(false);
-  const [firstIn, setFirstIn] = useState(true);
-  const [isRedeem, setIsRedeem] = useState(false);
-  const [data, setData] = useState({ assets: [] });
-  const [isLogin, setIsLogin] = useState(false);
-  const [userInfo, setUserInfo] = useState({});
+    : null;
   useEffect(() => {
     window.analytics.logEvent("enter_login_page");
   }, []);
 
   useEffect(() => {
-    if (params.userInfo && firstIn) {
-      const queryData = async () => {
-        let { data } = await request.post(
-          "/marketing/infoVerify",
-          base64UserInfo
-        );
-        if (data?.redeemType === 1) {
-          setIsRedeem(true);
-          setData(data);
-        } else {
-          if (data?.facebookBound) {
-            setIsLogin(true);
-          }
-
-          setUserInfo({
-            accountId: data.accountId,
-            platform: data.platform,
-          });
-        }
-        setFirstIn(false);
-      };
-      queryData();
+    if (params.userInfo && isNaN(userInfo?.redeemType)) {
+      infoVerify(params.userInfo);
     }
-  }, [params.userInfo, firstIn]);
+  }, [params.userInfo]);
 
-  function handleFbLogin() {
-    setLoading(true);
-    window.analytics.logEvent("click_fb_login");
-    window.FB?.login(
-      function ({ authResponse, status }) {
-        if (status === "connected") {
-          let params = {
-            userEmail: "",
-            accountId: userInfo.accountId,
-            userId: authResponse.userID,
-            type: "Facebook",
-            appId: "1026987934476519",
-            token: authResponse.accessToken,
-            userName: "",
-            platform: userInfo.platform,
-            boundDevice: userInfo.platform,
-            originalMessage: JSON.stringify(authResponse),
-          };
-          window.FB.api(
-            "/me?fields=email,id,name&access_token=" + authResponse.accessToken,
-            async (response) => {
-              params.userName = response.name;
-              params.userEmail = response.email;
-              let { data } = await request.post("/thirdPartyUser/bind", params);
-              if (data.accountId) {
-                window.analytics.logEvent("click_fb_login_success");
-                setIsLogin(true);
-              }
-            }
-          );
-        } else {
-          window.analytics.logEvent("click_fb_login_failed");
-          Toast.Fail("facebook login failed!");
-        }
-        setLoading(false);
-      },
-      { scope: "public_profile,email" }
-    );
-  }
-
-  if (firstIn && base64UserInfo !== "") {
+  if (isNaN(userInfo?.redeemType) && !base64UserInfo) {
     return (
       <div
         style={{
@@ -110,8 +40,8 @@ export default function Login(props) {
   }
 
   //跳转体现页面
-  if (isRedeem) {
-    return <Redirect to={`/redeem/${btoa(JSON.stringify(data))}`} />;
+  if (userInfo?.redeemType == 1) {
+    return <Redirect to={`/redeem/${btoa(JSON.stringify(userInfo))}`} />;
   }
 
   //未传玩家数据直接跳转主页
@@ -120,8 +50,8 @@ export default function Login(props) {
   }
 
   //已经绑定了facebook就跳过登录
-  if (isLogin) {
-    return <Redirect to={`/home/${base64UserInfo}`} />;
+  if (userInfo?.facebookBound) {
+    return <Redirect to={`/home`} />;
   }
 
   return (
@@ -141,10 +71,26 @@ export default function Login(props) {
           backgroundImage: `url(${loginUrl})`,
           backgroundSize: "100% 100%",
         }}
-        onClick={handleFbLogin}
+        onClick={() => handleLogin(userInfo)}
         disabled={loading}
         loading={loading}
       ></Button>
     </Flex>
   );
 }
+
+const mapStateToProps = ({ user }, ownProps) => ({
+  userInfo: user.userInfo,
+  loading: user.loading,
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  handleLogin: (userInfo) => {
+    dispatch(bindUser(userInfo));
+  },
+  infoVerify: (base64Info) => {
+    dispatch(infoVerify(base64Info));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

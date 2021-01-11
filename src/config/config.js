@@ -6,9 +6,9 @@ const config = {
   },
   gameResourceUrl: "https://redeem-resource.s3-us-west-2.amazonaws.com/",
   server: {
-    // baseUrl: "https://fkz3gphuoa.execute-api.us-west-2.amazonaws.com/Prod",
-    baseUrl:
-      "https://xqlewom61k.execute-api.cn-northwest-1.amazonaws.com.cn/Prod",
+    baseUrl: "https://fkz3gphuoa.execute-api.us-west-2.amazonaws.com/Prod",
+    // baseUrl:
+    //   "https://xqlewom61k.execute-api.cn-northwest-1.amazonaws.com.cn/Prod",
   },
 };
 

@@ -7,6 +7,7 @@ import {
   Flex,
   NavBar,
 } from "antd-mobile";
+import {connect} from "react-redux"
 
 import backImg from "../../assets/back.png";
 import copy from "copy-to-clipboard";
@@ -31,10 +32,10 @@ const info = [
   "Everyone is playing, everyone is withdrawing, what are you waiting for, hurry up and download right now~",
 ];
 
-const Invite = (props) => {
+const Invite = ({inviteInfo,match}) => {
   const emailContent = `Hi,How is it going？I'm playing the so funny game and need you help right now!Just help me download this game thorough the link and I can gain $50 immediately!%0dClick the link！👇👇👇(If link is not clickable, please copy and paste it into the address bar)%0d`;
-  const shareUrl = atob(props.match.params.shareUrl);
-  const from = props.match.params.from;
+  const shareUrl = inviteInfo.promotionalLink;
+  const from = match.params.from;
   const randomIndex = Math.floor(Math.random() * info.length);
   const emailTitleIndex = Math.floor(Math.random() * 8);
   const randomInfo = info[randomIndex];
@@ -113,4 +114,9 @@ const Invite = (props) => {
   );
 };
 
-export default Invite;
+const mapStateToPrpos = ({user},ownProps) =>({
+  useInfo:user.useInfo,
+  inviteInfo:user.inviteInfo,
+})
+
+export default connect(mapStateToPrpos)(Invite);
