@@ -1,20 +1,15 @@
 import { connect } from "react-redux";
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Flex,
-  WhiteSpace,
-  ActivityIndicator,
-} from "antd-mobile";
+import { Button, Flex, WhiteSpace, ActivityIndicator } from "antd-mobile";
 import { Redirect } from "react-router-dom";
 import iconUrl from "../../assets/icon.png";
 import loginUrl from "../../assets/login.png";
 import "./index.css";
-import { infoVerify,bindUser } from "../../actions/user"
+import { infoVerify, bindUser } from "../../actions/user";
 
 function Login(props) {
   let { params } = props.match;
-  const {loading,handleLogin,infoVerify,userInfo} = props;
+  const { loading, handleLogin, infoVerify, userInfo } = props;
   let base64UserInfo = params.userInfo
     ? decodeURIComponent(params.userInfo)
     : null;
@@ -55,9 +50,8 @@ function Login(props) {
   }
 
   //已经绑定了facebook就跳过登录
-  console.log(userInfo)
   if (userInfo?.facebookBound) {
-      return <Redirect to={`/home`} />
+    return <Redirect to={`/home`} />;
   }
 
   return (
@@ -77,7 +71,7 @@ function Login(props) {
           backgroundImage: `url(${loginUrl})`,
           backgroundSize: "100% 100%",
         }}
-        onClick={() =>handleLogin(userInfo)}
+        onClick={() => handleLogin(userInfo)}
         disabled={loading}
         loading={loading}
       ></Button>
@@ -85,19 +79,18 @@ function Login(props) {
   );
 }
 
-const mapStateToProps = ({user}, ownProps) => ({
+const mapStateToProps = ({ user }, ownProps) => ({
   userInfo: user.userInfo,
-  loading: user.loading
+  loading: user.loading,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleLogin: (userInfo) => {
-      dispatch(bindUser(userInfo))
+    dispatch(bindUser(userInfo));
   },
   infoVerify: (base64Info) => {
-      dispatch(infoVerify(base64Info))
-  }
+    dispatch(infoVerify(base64Info));
+  },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
-
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

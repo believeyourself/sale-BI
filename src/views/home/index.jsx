@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import {
   WhiteSpace,
   Button,
@@ -9,8 +9,8 @@ import {
   Modal,
 } from "antd-mobile";
 import ContactUs from "../../components/contactUs";
-import {getUserCaimpagn} from "../../actions/user"
-import {getConfig} from "../../actions/global"
+import { getUserCaimpagn } from "../../actions/user";
+import { getConfig } from "../../actions/global";
 
 //图片
 import inviteBannerUrl from "../../assets/invite_banner.jpg";
@@ -22,11 +22,11 @@ import videoMp4 from "../../assets/redeem.mp4";
 import "./index.css";
 import config from "../../config/config";
 
-const DEFAULT_INVITE_INFO = {}
-const DEFAULT_GLOBAL_CONFIG = {hotGames:[]}
+const DEFAULT_INVITE_INFO = {};
+const DEFAULT_GLOBAL_CONFIG = { hotGames: [] };
 
 function Home(props) {
-  let { inviteInfo,userInfo,getUserCaimpagn,hotGames,getConfig } = props;
+  let { inviteInfo, userInfo, getUserCaimpagn, hotGames, getConfig } = props;
   const videoRef = useRef(null);
   const videoContainerRef = useRef(null);
   const [randomBanner, setRandomBanner] = useState(null);
@@ -35,7 +35,7 @@ function Home(props) {
 
   useEffect(() => {
     if (userInfo) {
-      getUserCaimpagn(userInfo)
+      getUserCaimpagn(userInfo);
       getConfig();
       let randomNum = Math.ceil(Math.random() * 100);
       if (randomNum < 40) {
@@ -55,8 +55,6 @@ function Home(props) {
         );
       }
     }
-
-   
   }, [userInfo]);
 
   const goToInvite = (event_name = "click_invite", from = 0) => {
@@ -174,10 +172,10 @@ function Home(props) {
       <div>
         <Progress
           position="normal"
-          percent={inviteInfo?.currentValue / inviteInfo?.finalValue * 100}
+          percent={(inviteInfo?.currentValue / inviteInfo?.finalValue) * 100}
         />
-        <WhiteSpace></WhiteSpace>${inviteInfo?.currentValue} / $
-        {inviteInfo?.finalValue / 100}
+        <WhiteSpace></WhiteSpace>${(inviteInfo?.currentValue / 100)?.toFixed(2)}{" "}
+        / ${inviteInfo?.finalValue / 100}
       </div>
       <h3 style={{ paddingLeft: "15px", textAlign: "left" }}>My Games</h3>
       <Flex className="user_game" justify="start">
@@ -191,7 +189,10 @@ function Home(props) {
             href={`#/cashInfo/${inviteInfo.stage}/${inviteInfo.userCampaignId}`}
             size="small"
             className="cash_out_button"
-          > CASH OUT</Button>
+          >
+            {" "}
+            CASH OUT
+          </Button>
         ) : (
           <Button onClick={goToInvite} size="small" className="cash_out_button">
             CASH OUT
@@ -272,14 +273,14 @@ const ENVELOP_STATUS = {
   closed: 3, //关闭领取
 };
 
-const mapStateToProps = ({user,global},ownProps)=>({
-  userInfo:user.userInfo,
-  inviteInfo:user.inviteInfo || DEFAULT_INVITE_INFO,
-  hotGames:global.hotGames || []
+const mapStateToProps = ({ user, global }, ownProps) => ({
+  userInfo: user.userInfo,
+  inviteInfo: user.inviteInfo || DEFAULT_INVITE_INFO,
+  hotGames: global.hotGames || [],
 });
-const mapDispatchToProps = (dispatch,ownProps)=>({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   getUserCaimpagn: (useInfo) => dispatch(getUserCaimpagn(useInfo)),
   getConfig: () => dispatch(getConfig()),
 });
 
-export default connect(mapStateToProps,mapDispatchToProps)(Home); 
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
