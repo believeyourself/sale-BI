@@ -10,7 +10,7 @@ import {
   NoticeBar,
 } from "antd-mobile";
 import ContactUs from "../../components/contactUs";
-import { getUserCaimpagn } from "../../actions/user";
+import { getUserCampaign } from "../../actions/user";
 import { getConfig } from "../../actions/global";
 
 //图片
@@ -24,10 +24,9 @@ import "./index.css";
 import config from "../../config/config";
 
 const DEFAULT_INVITE_INFO = {};
-const DEFAULT_GLOBAL_CONFIG = { hotGames: [] };
 
 function Home(props) {
-  let { inviteInfo, userInfo, getUserCaimpagn, hotGames, getConfig } = props;
+  let { inviteInfo, userInfo, getUserCampaign, hotGames, getConfig } = props;
   const videoRef = useRef(null);
   const videoContainerRef = useRef(null);
   const [randomBanner, setRandomBanner] = useState(null);
@@ -36,8 +35,11 @@ function Home(props) {
 
   useEffect(() => {
     if (userInfo) {
-      getUserCaimpagn(userInfo);
+      getUserCampaign(userInfo);
       getConfig();
+      if (inviteInfo.theFirst) {
+        setEnvelopStatus(ENVELOP_STATUS.pending);
+      }
       let randomNum = Math.ceil(Math.random() * 100);
       if (randomNum < 40) {
         window.analytics.logEvent("cashout_invite_show");
@@ -56,7 +58,7 @@ function Home(props) {
         );
       }
     }
-  }, [userInfo]);
+  }, [userInfo, inviteInfo.theFirst]);
 
   const goToInvite = (event_name = "click_invite", from = 0) => {
     window.analytics.logEvent(event_name);
@@ -257,7 +259,7 @@ function Home(props) {
         visible={envelopStatus === ENVELOP_STATUS.received}
       >
         <div className="paypal">
-          <p className="paypal_value">$30</p>
+          <p className="paypal_value">${inviteInfo?.currentValue / 100}</p>
           <Button
             className="envelop_cashout cash_out_button"
             size="small"
@@ -284,7 +286,7 @@ const mapStateToProps = ({ user, global }, ownProps) => ({
   hotGames: global.hotGames || [],
 });
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  getUserCaimpagn: (useInfo) => dispatch(getUserCaimpagn(useInfo)),
+  getUserCampaign: (useInfo) => dispatch(getUserCampaign(useInfo)),
   getConfig: () => dispatch(getConfig()),
 });
 

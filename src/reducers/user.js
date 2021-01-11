@@ -10,10 +10,16 @@ export const UserReducer = (state = {}, action) => {
     case "INFO_VERIFY_SUCCESS": {
       return Object.assign({}, state, action);
     }
-    case "GET_USER_CAMPAOGNS": {
+    case "BIND_USER": {
       return Object.assign({}, state, action);
     }
-    case "GET_USER_CAMPAOGNS_SUCCESS": {
+    case "BIND_USER_SUCCESS": {
+      return Object.assign({}, state, action);
+    }
+    case "GET_USER_CAMPAIGNS": {
+      return Object.assign({}, state, action);
+    }
+    case "GET_USER_CAMPAIGNS_SUCCESS": {
       return Object.assign({}, state, action);
     }
     default:

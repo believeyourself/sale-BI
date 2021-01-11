@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Button, Flex, WhiteSpace, ActivityIndicator } from "antd-mobile";
 import { Redirect } from "react-router-dom";
 import iconUrl from "../../assets/icon.png";
