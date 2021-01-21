@@ -175,6 +175,9 @@
   width: 90vw;
   height: 40vh;
 }
+.envelop_container .am-modal-content {
+  background-color: transparent;
+}
 
 .envelop_container .envelop {
   width: 100%;
@@ -182,7 +185,7 @@
   background-image: url("../../assets/paypalEnvelop.png");
   background-size: 100% 100%;
 }
-
+q
 .envelop_container .open_envelop {
   position: absolute !important;
   width: 30vw;

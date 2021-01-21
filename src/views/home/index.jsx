@@ -26,7 +26,13 @@ import config from "../../config/config";
 const DEFAULT_INVITE_INFO = {};
 
 function Home(props) {
-  let { inviteInfo, userInfo, getUserCampaign, hotGames, getConfig } = props;
+  let {
+    inviteInfo,
+    userInfo = {},
+    getUserCampaign,
+    hotGames,
+    getConfig,
+  } = props;
   const videoRef = useRef(null);
   const videoContainerRef = useRef(null);
   const [randomBanner, setRandomBanner] = useState(null);
@@ -37,9 +43,6 @@ function Home(props) {
     if (userInfo) {
       getUserCampaign(userInfo);
       getConfig();
-      if (inviteInfo.theFirst) {
-        setEnvelopStatus(ENVELOP_STATUS.pending);
-      }
       let randomNum = Math.ceil(Math.random() * 100);
       if (randomNum < 40) {
         window.analytics.logEvent("cashout_invite_show");
@@ -58,12 +61,39 @@ function Home(props) {
         );
       }
     }
-  }, [userInfo, inviteInfo.theFirst]);
+  }, [userInfo]);
+
+  useEffect(() => {
+    if (inviteInfo.theFirst) {
+      setEnvelopStatus(ENVELOP_STATUS.pending);
+    }
+  }, [inviteInfo]);
 
   const goToInvite = (event_name = "click_invite", from = 0) => {
     window.analytics.logEvent(event_name);
     window.location.hash = `#/invite/${from}`;
   };
+
+  const goToCashOut = (canCashout) => {
+    window.analytics.logEvent("click_cash_out");
+    if (canCashout) {
+      window.location.hash = `#/cashInfo/${inviteInfo.stage}/${inviteInfo.userCampaignId}`;
+    } else {
+      Modal.alert(
+        "Not engouh balance to request payout",
+        "Invite friends now!",
+        [
+          {
+            text: "CANCEL",
+            onPress: () => console.log("cancel"),
+            style: "default",
+          },
+          { text: "INVITE", onPress: goToInvite },
+        ]
+      );
+    }
+  };
+
   const goToDownload = (appName) => {
     window.analytics.logEvent(`click_${appName}_download`);
     window.location.hash = `#/download/${appName}`;
@@ -80,42 +110,45 @@ function Home(props) {
   };
   //游戏资产
   let assets = [];
-  for (let i = 0; i < userInfo.assets.length; ++i) {
-    let asset = userInfo.assets[i];
-    let gameName = userInfo.appName?.toLowerCase();
-    let assetIconUrl = `${config.gameResourceUrl}${gameName}/assets_${asset.code}.png`;
-    let button = (
-      <Button disabled className="cash_out_button" size="small">
-        CASH OUT
-      </Button>
-    );
-    if (asset.currentValue >= asset.targetValue) {
-      button = (
-        <Button
-          onClick={() =>
-            (window.location.hash = `/cashInfo/${inviteInfo?.stage}/:${inviteInfo?.userCampaignId}`)
-          }
-          className="cash_out_button"
-          size="small"
-        >
+
+  if (Array.isArray(userInfo.assets)) {
+    for (let i = 0; i < userInfo.assets.length; ++i) {
+      let asset = userInfo.assets[i];
+      let gameName = userInfo.appName?.toLowerCase();
+      let assetIconUrl = `${config.gameResourceUrl}${gameName}/assets_${asset.code}.png`;
+      let button = (
+        <Button disabled className="cash_out_button" size="small">
           CASH OUT
         </Button>
       );
-    }
+      if (asset.currentValue >= asset.targetValue) {
+        button = (
+          <Button
+            onClick={() =>
+              (window.location.hash = `/cashInfo/${inviteInfo?.stage}/:${inviteInfo?.userCampaignId}`)
+            }
+            className="cash_out_button"
+            size="small"
+          >
+            CASH OUT
+          </Button>
+        );
+      }
 
-    assets.push(
-      <Flex key={`${userInfo.appName}_assets_${asset.code}`} justify="start">
-        <Flex.Item>
-          <Flex>
-            <img alt="" src={assetIconUrl}></img>
-            <span style={{ marginLeft: "8px" }}>
-              {asset.value} / {asset.targetValue}
-            </span>
-          </Flex>
-        </Flex.Item>
-        {button}
-      </Flex>
-    );
+      assets.push(
+        <Flex key={`${userInfo.appName}_assets_${asset.code}`} justify="start">
+          <Flex.Item>
+            <Flex>
+              <img alt="" src={assetIconUrl}></img>
+              <span style={{ marginLeft: "8px" }}>
+                {asset.value} / {asset.targetValue}
+              </span>
+            </Flex>
+          </Flex.Item>
+          {button}
+        </Flex>
+      );
+    }
   }
 
   //hot games
@@ -158,7 +191,7 @@ function Home(props) {
   }
 
   let iconUrl =
-    userGameName != ""
+    userGameName !== ""
       ? `${config.gameResourceUrl}${userGameName}/icon.png`
       : null;
   let inviteNodes = (
@@ -169,7 +202,12 @@ function Home(props) {
       </NoticeBar>
       <WhiteSpace></WhiteSpace>
       {randomBanner}
-      <img className="play_video_btn" onClick={showVideo} src={playImg} />
+      <img
+        alt=""
+        className="play_video_btn"
+        onClick={showVideo}
+        src={playImg}
+      />
       <div ref={videoContainerRef} className="redeem_video">
         <span onClick={hideVideo} className="close_icon">
           X
@@ -178,34 +216,35 @@ function Home(props) {
       </div>
       <img onClick={goToInvite} alt="" src={inviteBannerUrl} />
       <WhiteSpace></WhiteSpace>
-      <div>
-        <Progress
-          position="normal"
-          percent={(inviteInfo?.currentValue / inviteInfo?.finalValue) * 100}
-        />
-        <WhiteSpace></WhiteSpace>${(inviteInfo?.currentValue / 100)?.toFixed(2)}{" "}
-        / ${inviteInfo?.finalValue / 100}
-      </div>
-      <h3 style={{ paddingLeft: "15px", textAlign: "left" }}>My Games</h3>
+      <h3 style={{ textAlign: "left" }}>Redeem Process</h3>
+      <Flex className="user_game">
+        <Flex.Item>
+          <Progress
+            position="normal"
+            percent={(inviteInfo?.currentValue / inviteInfo?.finalValue) * 100}
+          />
+        </Flex.Item>
+        <Flex.Item>
+          ${(inviteInfo?.currentValue / 100)?.toFixed(2)} / $
+          {inviteInfo?.finalValue / 100}
+        </Flex.Item>
+        <Button
+          onClick={() => goToCashOut(inviteInfo.canCashout)}
+          size="small"
+          className="cash_out_button"
+        >
+          CASH OUT
+        </Button>
+      </Flex>
+      <h3 style={{ textAlign: "left" }}>My Games</h3>
       <Flex className="user_game" justify="start">
         <img alt="" className="avatar" src={iconUrl} />
         <Flex.Item>
           <span>{userInfo.appName}</span>
         </Flex.Item>
-        {inviteInfo.canCashOut ? (
-          <Button
-            type="link"
-            href={`#/cashInfo/${inviteInfo.stage}/${inviteInfo.userCampaignId}`}
-            size="small"
-            className="cash_out_button"
-          >
-            CASH OUT
-          </Button>
-        ) : (
-          <Button onClick={goToInvite} size="small" className="cash_out_button">
-            CASH OUT
-          </Button>
-        )}
+        <Button onClick={goToInvite} size="small" className="play_button">
+          INVITE
+        </Button>
       </Flex>
       <WhiteSpace></WhiteSpace>
       <section className="user">
@@ -218,7 +257,7 @@ function Home(props) {
         <WhiteSpace></WhiteSpace>
         {assets}
       </section>
-      <h3 style={{ paddingLeft: "15px", textAlign: "left" }}>Hot Games</h3>
+      <h3 style={{ textAlign: "left" }}>Hot Games</h3>
       <WhiteSpace></WhiteSpace>
     </React.Fragment>
   );

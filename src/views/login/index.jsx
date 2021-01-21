@@ -21,7 +21,7 @@ function Login(props) {
     : null;
 
   //缓存数据与参数不一致时不适用缓存
-  if (base64UserInfo != cachedBase64UserInfo) {
+  if (base64UserInfo !== cachedBase64UserInfo) {
     userInfo = {};
   }
   useEffect(() => {
@@ -48,7 +48,7 @@ function Login(props) {
   }
 
   //跳转体现页面
-  if (userInfo?.redeemType == 1) {
+  if (userInfo?.redeemType === 1) {
     return <Redirect to={`/redeem/${btoa(JSON.stringify(userInfo))}`} />;
   }
 
@@ -66,12 +66,8 @@ function Login(props) {
     <Flex align="center" justify="center" className="login" direction="column">
       <img alt="" height="120" src={iconUrl} />
       <WhiteSpace size="xl"></WhiteSpace>
-      <h2>INVITE AND</h2>
-      <h1>RECEIVE</h1>
-      <h1 className="money">CASH PRIZE</h1>
-      <p>
-        Invite friends for <span style={{ color: "#116aad" }}>$50</span>.
-      </p>
+      <h2>Login To</h2>
+      <h1>receive $50</h1>
       <WhiteSpace size="xl"></WhiteSpace>
       <Button
         style={{
